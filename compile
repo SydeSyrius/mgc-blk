@@ -1,0 +1,1 @@
+g++ c_files/interp.cpp -l tcl -o ~/run_project 
