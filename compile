@@ -1,1 +1,2 @@
-g++ c_files/interp.cpp -l tcl -o ~/run_project 
+g++ c_files/interp.cpp -l tcl -o ~/Desktop/run_project 
+cp tcl_files ~/Desktop/. -rf

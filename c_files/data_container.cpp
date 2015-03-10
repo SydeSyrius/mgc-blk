@@ -15,6 +15,9 @@ public:
   void add_new_object(string);
   void delete_object(string n){};
   void display_data(object *disp);
+  void display_data() {display_data(head);};
+
+  
 };
 
 void data_container::display_data(object *disp) {
@@ -30,7 +33,6 @@ void data_container::display_data(object *disp) {
 }
 
 void data_container::add_new_object(string name) {
- 
   object *finder=head;
   
   if (finder == NULL) {

@@ -8,7 +8,8 @@
 
 class C_Tcl_interface {
     public:
-    Tcl_Interp *interp;  
+    Tcl_Interp *interp;
+    data_container *data_structure;
     int argss_n; 
     
     C_Tcl_interface();
@@ -22,7 +23,8 @@ class C_Tcl_interface {
     int execute_plus (int ,Tcl_Obj *CONST objv[]);
     int execute_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int execute_plus_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-  
+    int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    int wyswietl_strukture(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 };
 
 
@@ -33,6 +35,8 @@ C_Tcl_interface :: C_Tcl_interface () {
     fprintf (stderr, "Tcl_Init error: %s\n", Tcl_GetStringResult (interp));
     exit (EXIT_FAILURE);
   }
+  
+  data_structure = new data_container();
 }
 
 void C_Tcl_interface::tcl_main() {
@@ -44,10 +48,9 @@ void C_Tcl_interface::tcl_main() {
  // while (1) {
     char cmd[1024];
     //fgets (cmd, sizeof (cmd), stdin);
-    string cmdd = "source Tcl_int.tcl";
+    string cmdd = "source tcl_files/inputParser.tcl\nsource Tcl_int.tcl";
     if (TCL_OK != Tcl_Eval (interp, cmdd.c_str())) {
       cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
-    //  continue;
     } 
   //}
 }
@@ -62,6 +65,9 @@ void C_Tcl_interface::InitializeCommands() {
   InitializeCommand("+tcl");
   InitializeCommand("+tcltcl");
   
+  InitializeCommand("addToClist");
+  InitializeCommand("wyswietl_strukture");
+  
 }
 
 int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
@@ -72,6 +78,7 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
     // objv[0]                 -> command name
     // objv[1] to objv[objc-1] -> arguments
     string commandName = Tcl_GetString(objv[0]);
+    //cout<<"COM:"<<commandName<<endl;
     
     if (commandName=="+") {
       return execute_plus(objc, objv);
@@ -79,18 +86,14 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
       return execute_plus_in_Tcl(interp, objc, objv) ;
     } else if (commandName=="+tcltcl") {
       return execute_plus_plus_in_Tcl(interp, objc, objv) ;
+    } else if (commandName=="addToClist") {
+      return addToClist(interp, objc, objv) ;
+    } else if (commandName=="wyswietl_strukture") {
+      return wyswietl_strukture(interp, objc, objv) ;
     }
-    
+
   
-//    string test;
-//    Tcl_Obj *res;
-//    res = Tcl_NewLongObj (n1 + n2);
-//    Tcl_SetObjResult (interp, res);
-//    cout<<"result is  : "<< Tcl_GetStringResult (interp)<<endl; 
-//    test = "set a a";
-  //  Tcl_Eval(interp, test.c_str());
-       
-    return TCL_OK;
+  return TCL_OK;
 }
 
 // This method is parsing arguments from Tcl interpreted and calculating result in C
@@ -169,5 +172,37 @@ int C_Tcl_interface::execute_plus_plus_in_Tcl(Tcl_Interp *interp, int objc, Tcl_
   command = new_stream.str();
 
   Tcl_Eval(interp, command.c_str());
+  return TCL_OK;
+}
+
+int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  string row;
+
+   if (2 != objc) {
+    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
+    return TCL_ERROR;
+  }
+
+  row = Tcl_GetString (objv[1]);
+  data_structure->add_new_object(row);
+  
+
+//  Tcl_Eval(interp, command.c_str());
+  return TCL_OK;
+}
+
+int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+
+   if (1 < objc) {
+     // do poprawy
+    Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
+    return TCL_ERROR;
+  }
+
+  
+  data_structure->display_data();
+  
+
+//  Tcl_Eval(interp, command.c_str());
   return TCL_OK;
 }

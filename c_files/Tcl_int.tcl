@@ -406,6 +406,8 @@
       
       set maybe [concat $vars $cmds $execs $files]
       set shortest [shortMatch $maybe]
+      #removed commands suggestions
+      return
       if {"$word" == "$shortest"} {
           if {[llength $maybe] > 1 && $env(COMPLETION_MATCH) != $maybe} {
               set env(COMPLETION_MATCH) $maybe
