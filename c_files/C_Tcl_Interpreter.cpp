@@ -1,9 +1,15 @@
 /*
  * C_Tcl_interface.cpp
  * 
- * 
- * 
- * 
+ * Commands:
+ *  - wczytaj_plik_wejsciowy
+ *  - zapisz_plik_wynikowy
+ *  - wykonaj_skrypt
+ *  - raportuj_obiekt
+ *  - usun_obiekt -> removeFromClist
+ *  - dodaj_obiekt -> addToClist
+ *  - zmien_litere
+ *
  */
 
 class C_Tcl_interface {
@@ -20,10 +26,13 @@ class C_Tcl_interface {
     void tcl_main();
     void InitializeCommand(string) ;
     void InitializeCommands() ;
+
+    // Registered cmds
     int execute_plus (int ,Tcl_Obj *CONST objv[]);
     int execute_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int execute_plus_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int wyswietl_strukture(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 };
 
@@ -66,6 +75,7 @@ void C_Tcl_interface::InitializeCommands() {
   InitializeCommand("+tcltcl");
   
   InitializeCommand("addToClist");
+  InitializeCommand("removeFromList");
   InitializeCommand("wyswietl_strukture");
   
 }
@@ -88,6 +98,8 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
       return execute_plus_plus_in_Tcl(interp, objc, objv) ;
     } else if (commandName=="addToClist") {
       return addToClist(interp, objc, objv) ;
+    } else if (commandName=="removeFromClist") {
+        return removeFromClist(interp, objc, objv) ;
     } else if (commandName=="wyswietl_strukture") {
       return wyswietl_strukture(interp, objc, objv) ;
     }
@@ -191,6 +203,11 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   return TCL_OK;
 }
 
+int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+	// del object
+	return TCL_OK;
+
+}
 int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
    if (1 < objc) {
