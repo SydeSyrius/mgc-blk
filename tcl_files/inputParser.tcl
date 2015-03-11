@@ -23,7 +23,7 @@ proc czytaj_plik {file_name} {
     } elseif {[regexp {^$} $single_line_no_space]} {
       #puts "Can be ignored" - empty line
     } else {
-      puts "ERROR: Błąd składni w linii '$single_line'"
+      puts "ERROR: Błąd składni w linii '$single_line'."
       exit 1
       #puts "This is a syntax error"
     }
