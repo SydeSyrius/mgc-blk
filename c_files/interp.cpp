@@ -8,6 +8,6 @@ int main (int argc, char *argv[]) {
   cmdLineHandling (argc, argv); // Parse cmdLine
 
   inst->tcl_main();
-  
+
   return EXIT_SUCCESS;
 }

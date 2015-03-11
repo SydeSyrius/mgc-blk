@@ -29,7 +29,7 @@ void cmdLineMessage::printError() {
 }
 
 int cmdLineHandling (int argc, char *argv[]) {
-	  cmdLineMessage message = new cmdLineMessage ();
+	  cmdLineMessage message;
 	  if (argc == 1) {
 		  message.printBanner();
 	  }
@@ -50,8 +50,8 @@ int cmdLineHandling (int argc, char *argv[]) {
 				return 1;
 			}
 			else {
-				string cmd = "wczytaj_plik " + argv[2];
-				Tcl_Eval(interp, cmd.c_str() ) ;
+				string cmd = "wczytaj_plik a";
+
 				return 0;
 			}
 		}

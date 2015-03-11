@@ -212,7 +212,7 @@ int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *
 
    if (1 < objc) {
      // do poprawy
-    Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
+    //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
     return TCL_ERROR;
   }
 
