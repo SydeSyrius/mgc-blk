@@ -22,7 +22,7 @@ void cmdLineMessage::printBanner() {
 	cout << endl;
 }
 
-cmdLineMessage::printError() {
+void cmdLineMessage::printError() {
 	cout << endl;
 	cout << "Blad - zobacz -help" << endl;
 	cout << endl;
