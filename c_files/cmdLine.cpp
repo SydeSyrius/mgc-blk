@@ -51,7 +51,8 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
 				message.printError();
 			}
 			else {
-				string cmd = "wczytaj_plik_wejsciowy " + std::string(argv[2]);
+				message.printBanner();
+				string cmd = "wykonaj_skrypt " + std::string(argv[2]);
 				if (TCL_OK != Tcl_Eval (interp, cmd.c_str())) {
 				      cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
 				      exit (1);

@@ -30,6 +30,7 @@ class C_Tcl_interface {
     void InitializeCommands() ;
 
     // Registered cmds
+    int readInputDofile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int execute_plus (int ,Tcl_Obj *CONST objv[]);
     int execute_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int execute_plus_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
@@ -55,7 +56,7 @@ void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
   
   // Link Commands commands
   InitializeCommands();
-  cmdLineHandling (argc, argv); // Parse cmdLine
+
   // wait for commands promt
  // while (1) {
     char cmd[1024];
@@ -63,7 +64,8 @@ void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
     string cmdd = "source tcl_files/inputParser.tcl\nsource Tcl_int.tcl";
     if (TCL_OK != Tcl_Eval (interp, cmdd.c_str())) {
       cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
-    } 
+    }
+    cmdLineHandling (argc, argv); // Parse cmdLine
   //}
 }
 
@@ -77,6 +79,7 @@ void C_Tcl_interface::InitializeCommands() {
   InitializeCommand("+tcl");
   InitializeCommand("+tcltcl");
   
+  InitializeCommand("readInputDofile");
   InitializeCommand("addToClist");
   InitializeCommand("removeFromList");
   InitializeCommand("wyswietl_strukture");
@@ -104,6 +107,8 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
         return removeFromClist(interp, objc, objv) ;
     } else if (commandName=="wyswietl_strukture") {
       return wyswietl_strukture(interp, objc, objv) ;
+    } else if (commandName=="readInputDofile") {
+       return execute_read_input(interp, objc, objv) ;
     }
 
   
@@ -149,13 +154,26 @@ int C_Tcl_interface::execute_plus_in_Tcl(Tcl_Interp *interp, int objc, Tcl_Obj *
   if (TCL_OK != Tcl_GetLongFromObj (interp, objv[2], &n2)) {
     return TCL_ERROR;
   } 
-  
-  
+
   
   Tcl_Obj *result;
   result = Tcl_NewLongObj (n1 + n2);
   Tcl_SetObjResult(interp, result);
   cout<<"Results: "<<Tcl_GetStringResult (interp)<<endl;
+}
+
+int C_Tcl_interface::readInputDofile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+
+  if (2 != objc) {
+	  Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
+	  return TCL_ERROR;
+  }
+
+  cout<<"Wczytaj dofile"<<  Tcl_GetString(objv[1]) << endl ;
+  if (TCL_OK != Tcl_EvalFile(interp,Tcl_GetString(objv[1]))) {
+	  return TCL_ERROR;
+  }
+  return 0;
 }
 
 // This method is creating string in C, that is used to be a command in Tcl_CmdDeleteProc
