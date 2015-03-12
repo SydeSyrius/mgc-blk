@@ -12,6 +12,7 @@
  *
  */
 
+
 class C_Tcl_interface {
     public:
     Tcl_Interp *interp;
@@ -23,7 +24,8 @@ class C_Tcl_interface {
       return (reinterpret_cast<C_Tcl_interface*>(clientData))->LinkCommand (interp, objc, objv);
     }
     int LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-    void tcl_main();
+    int cmdLineHandling (int argc, char *argv[]);
+    void tcl_main(int argc, char* argv[]);
     void InitializeCommand(string) ;
     void InitializeCommands() ;
 
@@ -34,6 +36,7 @@ class C_Tcl_interface {
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int wyswietl_strukture(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+
 };
 
 
@@ -48,11 +51,11 @@ C_Tcl_interface :: C_Tcl_interface () {
   data_structure = new data_container();
 }
 
-void C_Tcl_interface::tcl_main() {
+void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
   
   // Link Commands commands
   InitializeCommands();
-  
+  cmdLineHandling (argc, argv); // Parse cmdLine
   // wait for commands promt
  // while (1) {
     char cmd[1024];
@@ -77,7 +80,6 @@ void C_Tcl_interface::InitializeCommands() {
   InitializeCommand("addToClist");
   InitializeCommand("removeFromList");
   InitializeCommand("wyswietl_strukture");
-  
 }
 
 int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {

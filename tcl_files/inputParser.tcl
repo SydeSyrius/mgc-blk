@@ -1,5 +1,5 @@
 
-proc czytaj_plik {file_name} {
+proc wczytaj_plik_wejsciowy {file_name} {
   if {![file exist $file_name]} {
     puts "ERROR: wskazany plik '$file_name' nie istnieje."
     exit 1
