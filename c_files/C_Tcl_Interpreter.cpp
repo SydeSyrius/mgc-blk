@@ -18,6 +18,7 @@ class C_Tcl_interface {
     Tcl_Interp *interp;
     data_container *data_structure;
     int argss_n; 
+    cmdLineMessage message;
     
     C_Tcl_interface();
     static int AddObjCmd (ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
@@ -56,17 +57,40 @@ void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
   
   // Link Commands commands
   InitializeCommands();
+  cmdLineHandling (argc, argv);
+}
 
-  // wait for commands promt
- // while (1) {
-    char cmd[1024];
-    //fgets (cmd, sizeof (cmd), stdin);
-    string cmdd = "source tcl_files/inputParser.tcl\nsource Tcl_int.tcl";
-    cmdLineHandling (argc, argv);
-    if (TCL_OK != Tcl_Eval (interp, cmdd.c_str())) {
-      cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
+int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
+  string cmd;
+  if (argc == 1) {
+    message.printBanner();
+    cmd = "source tcl_files/inputParser.tcl\nsource Tcl_int.tcl";
+  } else if (argv[1] == std::string("-help")) {
+    if (argc > 2) {
+      message.printError();
+    } else {
+      message.printHelp();
+    } 
+  } else if (argv[1] == std::string("-skrypt")) {
+    if (argv[2] != NULL) {
+      if (argc>3){
+	message.printError();
+      } else {
+	message.printBanner();
+	cmd = "source tcl_files/inputParser.tcl\nreadInputDofile " + std::string(argv[2]);
+      }
+    } else {
+      message.printError();
     }
-  //}
+  } else {
+    message.printError();
+  }
+  // Run tcl console
+  if (TCL_OK != Tcl_Eval (interp, cmd.c_str())) {
+    cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
+    exit (1);
+  }
+  return 0;
 }
 
 void C_Tcl_interface::InitializeCommand(string command_name) {
@@ -87,13 +111,10 @@ void C_Tcl_interface::InitializeCommands() {
 
 int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
     // This is a command parser
-    
-    
     // objc                    -> number of arguments    
     // objv[0]                 -> command name
     // objv[1] to objv[objc-1] -> arguments
     string commandName = Tcl_GetString(objv[0]);
-    //cout<<"COM:"<<commandName<<endl;
     
     if (commandName=="+") {
       return execute_plus(objc, objv);
@@ -236,10 +257,6 @@ int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *
     return TCL_ERROR;
   }
 
-  
   data_structure->display_data();
-  
-
-//  Tcl_Eval(interp, command.c_str());
   return TCL_OK;
 }
