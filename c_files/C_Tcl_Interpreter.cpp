@@ -62,10 +62,10 @@ void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
     char cmd[1024];
     //fgets (cmd, sizeof (cmd), stdin);
     string cmdd = "source tcl_files/inputParser.tcl\nsource Tcl_int.tcl";
+    cmdLineHandling (argc, argv);
     if (TCL_OK != Tcl_Eval (interp, cmdd.c_str())) {
       cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
     }
-    cmdLineHandling (argc, argv); // Parse cmdLine
   //}
 }
 
@@ -81,7 +81,7 @@ void C_Tcl_interface::InitializeCommands() {
   
   InitializeCommand("readInputDofile");
   InitializeCommand("addToClist");
-  InitializeCommand("removeFromList");
+  InitializeCommand("removeFromClist");
   InitializeCommand("wyswietl_strukture");
 }
 
@@ -108,7 +108,7 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
     } else if (commandName=="wyswietl_strukture") {
       return wyswietl_strukture(interp, objc, objv) ;
     } else if (commandName=="readInputDofile") {
-       return execute_read_input(interp, objc, objv) ;
+       return readInputDofile(interp, objc, objv) ;
     }
 
   
