@@ -52,7 +52,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
 			}
 			else {
 				message.printBanner();
-				string cmd = "wykonaj_skrypt " + std::string(argv[2]);
+				string cmd = "source tcl_files/inputParser.tcl\nreadInputDofile " + std::string(argv[2]);
 				if (TCL_OK != Tcl_Eval (interp, cmd.c_str())) {
 				      cout<<"Error: "<<Tcl_GetStringResult (interp)<<endl;
 				      exit (1);

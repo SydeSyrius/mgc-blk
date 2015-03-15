@@ -169,7 +169,7 @@ int C_Tcl_interface::readInputDofile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 	  return TCL_ERROR;
   }
 
-  cout<<"Wczytaj dofile"<<  Tcl_GetString(objv[1]) << endl ;
+  cout<<"Wykonuje skrypt "<<  Tcl_GetString(objv[1]) << endl ;
   if (TCL_OK != Tcl_EvalFile(interp,Tcl_GetString(objv[1]))) {
 	  return TCL_ERROR;
   }
