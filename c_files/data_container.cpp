@@ -13,7 +13,7 @@ public:
   ~data_container() {head = NULL;};
   
   void add_new_object(string);
-  void delete_object(string n){};
+  void delete_object(string name);
   void display_data(object *disp);
   void display_data() {display_data(head);};
 
@@ -71,4 +71,8 @@ void data_container::add_new_object(string name) {
   }
   finder->next = new object(name, finder, NULL);
   
+}
+
+void data_container::delete_object(string name) {
+	cout << "Usuwam";
 }

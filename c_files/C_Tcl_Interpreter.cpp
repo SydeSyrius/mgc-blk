@@ -64,7 +64,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   string cmd;
   if (argc == 1) {
     message.printBanner();
-    cmd = "source tcl_files/inputParser.tcl\nsource Tcl_int.tcl";
+    cmd = "source tcl_files/inputParser.tcl\nsource tcl_files/help.tcl\nsource Tcl_int.tcl";
   } else if (argv[1] == std::string("-help")) {
     if (argc > 2) {
       message.printError();
@@ -77,7 +77,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
 	message.printError();
       } else {
 	message.printBanner();
-	cmd = "source tcl_files/inputParser.tcl\nreadInputDofile " + std::string(argv[2]);
+	cmd = "source tcl_files/inputParser.tcl\nsource tcl_files/help.tcl\nreadInputDofile " + std::string(argv[2]);
       }
     } else {
       message.printError();
@@ -246,8 +246,17 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 
 int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 	// del object
-	return TCL_OK;
+  string row;
 
+   if (2 != objc) {
+    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
+    return TCL_ERROR;
+  }
+
+  row = Tcl_GetString (objv[1]);
+  data_structure->delete_object(row);
+
+  return TCL_OK;
 }
 int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
