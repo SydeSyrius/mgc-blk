@@ -64,7 +64,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   string cmd;
   if (argc == 1) {
     message.printBanner();
-    cmd = "source tcl_files/inputParser.tcl\nsource tcl_files/help.tcl\nsource Tcl_int.tcl";
+    cmd = "source tcl_files/tcl_init_variables.tcl\nsource Tcl_int.tcl";
   } else if (argv[1] == std::string("-help")) {
     if (argc > 2) {
       message.printError();
@@ -77,7 +77,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
 	message.printError();
       } else {
 	message.printBanner();
-	cmd = "source tcl_files/inputParser.tcl\nsource tcl_files/help.tcl\nreadInputDofile " + std::string(argv[2]);
+	cmd = "source tcl_files/tcl_init_variables.tcl\nreadInputDofile " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
       }
     } else {
       message.printError();

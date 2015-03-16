@@ -1,2 +1,3 @@
 g++ c_files/interp.cpp -l tcl -std=c++11 -o ~/Desktop/run_project 
 cp tcl_files ~/Desktop/. -rf
+cp   c_files/Tcl_int.tcl  ~/Desktop/. -rf
