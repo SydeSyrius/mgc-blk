@@ -36,9 +36,12 @@ proc add_to_single_name {component_name} {
   regsub -nocase "\\-" $component_name "" component_no_minus
   if {$component_no_minus ni $name_list(original)} {
     append name_list(original) "$component_no_minus  "
-    addToClist $component_name
+    dodaj_obiekt $component_name
   } else {
     puts "ERROR: Nazwa została wcześniej użyta '$component_name'."
     exit 1
   }
+}
+
+proc display_single_name {name_list} {
 }
