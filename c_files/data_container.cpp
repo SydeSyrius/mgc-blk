@@ -16,7 +16,7 @@ public:
   void delete_object(string name);
   void display_data(object *disp);
   void display_data() {display_data(head);};
-  void display_data_new();
+  string display_data_new();
   
 };
 
@@ -32,26 +32,26 @@ void data_container::display_data(object *disp) {
   return;
 }
 
-void data_container::display_data_new() {
-  
+string data_container::display_data_new() {
+  string concatenate; 
   if (head==NULL) {
     cout<<"No data loaded"<<endl;
-    return;
+    return "";
   }
   object* disp = head;
   object* disp_top = head;
   object* disp_top2 = NULL;
   bool takeChild = 0;
   while (disp_top!=NULL) {
-    cout<<disp_top->name<<endl;
+    concatenate+=disp_top->name+"\n";
     if (disp_top->child!=NULL) {
       disp_top2=disp_top->child;
       while (disp_top2!=NULL) {
-	cout<<disp_top2->name<<endl;
+	concatenate+=disp_top2->name+"\n";
 	if (disp_top2->child!=NULL) {
 	  disp=disp_top2->child;
 	  while (disp!=NULL) {
-	    cout<<disp->name<<endl;
+	    concatenate+=disp->name+"\n";
 	    disp=disp->next;
 	  }
 	}
@@ -60,8 +60,7 @@ void data_container::display_data_new() {
     }
     disp_top=disp_top->next; 
   }
-  
-  return;
+  return concatenate;
 }
 
 void data_container::add_new_object(string name) {

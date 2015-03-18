@@ -269,8 +269,7 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
     //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
     return TCL_ERROR;
   }
-
-  data_structure->display_data_new();
+  cout << data_structure->display_data_new();
   return TCL_OK;
 }
 
@@ -282,7 +281,6 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   }
   ofstream fh;
   fh.open(Tcl_GetString(objv[1]));
-  cout << &fh;
-  data_structure->display_data();
+  fh<<data_structure->display_data_new();
   fh.close();
 }
