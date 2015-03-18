@@ -45,3 +45,29 @@ proc add_to_single_name {component_name} {
 
 proc display_single_name {name_list} {
 }
+
+proc removeFromSingle {component_name} {
+  global name_list
+  regsub -nocase "\\-" $component_name "" component_no_minus
+  set index [lsearch -exact $name_list(original) $component_no_minus]
+
+  if { $index == -1 } {
+	puts "ERROR: Nazwa nie zostala znaleziona"
+  } else {
+        set name_list(original) [lreplace $name_list(original) $index $index]
+  }
+}
+
+proc changeLetter {letter new_letter} {
+  global name_list
+  if { [regsub -all "$letter" $name_list(original) "$new_letter" name_list(tmp)]} {
+  	if { [llength [lsort $name_list(tmp)]] != [llength [lsort -unique $name_list(tmp)]] } {
+		puts "To da duplikat" 
+	  } else {
+		puts "Ok"
+		set $name_list(original) $name_list(tmp)
+	  }
+  } else {
+       puts "ERROR: litera nie zostala znaleziona"
+  }
+}
