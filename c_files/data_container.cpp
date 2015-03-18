@@ -16,7 +16,7 @@ public:
   void delete_object(string name);
   void display_data(object *disp);
   void display_data() {display_data(head);};
-
+  void display_data_new();
   
 };
 
@@ -29,6 +29,38 @@ void data_container::display_data(object *disp) {
   cout<<disp->name<<endl;
   if (disp->child!=NULL) display_data(disp->child);
   if (disp->next!=NULL)  display_data(disp->next);
+  return;
+}
+
+void data_container::display_data_new() {
+  
+  if (head==NULL) {
+    cout<<"No data loaded"<<endl;
+    return;
+  }
+  object* disp = head;
+  object* disp_top = head;
+  object* disp_top2 = NULL;
+  bool takeChild = 0;
+  while (disp_top!=NULL) {
+    cout<<disp_top->name<<endl;
+    if (disp_top->child!=NULL) {
+      disp_top2=disp_top->child;
+      while (disp_top2!=NULL) {
+	cout<<disp_top2->name<<endl;
+	if (disp_top2->child!=NULL) {
+	  disp=disp_top2->child;
+	  while (disp!=NULL) {
+	    cout<<disp->name<<endl;
+	    disp=disp->next;
+	  }
+	}
+	disp_top2=disp_top2->next;
+      }
+    }
+    disp_top=disp_top->next; 
+  }
+  
   return;
 }
 

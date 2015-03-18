@@ -16,10 +16,10 @@ proc wczytaj_plik_wejsciowy {file_name} {
       add_to_single_name $single_line_no_space
     } elseif {[regexp {^-[A-Za-z]+$} $single_line_no_space tmp first_child]} {
       #puts "This is a first child $first_child"
-      add_to_single_name [string range $single_line_no_space 1 end]
+      add_to_single_name $single_line_no_space
     } elseif {[regexp {^--[A-Za-z]+$} $single_line_no_space tmp second_child]} {
       #puts "This is a first child $second_child"
-      add_to_single_name [string range $single_line_no_space 2 end]
+      add_to_single_name $single_line_no_space
     } elseif {[regexp {^$} $single_line_no_space]} {
       #puts "Can be ignored" - empty line
     } else {
