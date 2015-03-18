@@ -37,7 +37,8 @@ class C_Tcl_interface {
     int execute_plus_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-    int wyswietl_strukture(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    int displayStructure(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    int writeFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 
 };
 
@@ -103,10 +104,11 @@ void C_Tcl_interface::InitializeCommands() {
   InitializeCommand("+tcl");
   InitializeCommand("+tcltcl");
   
-  InitializeCommand("readInputDofile");
-  InitializeCommand("addToClist");
-  InitializeCommand("removeFromClist");
-  InitializeCommand("wyswietl_strukture");
+  InitializeCommand("wykonaj_skrypt");
+  InitializeCommand("dodaj_obiekt");
+  InitializeCommand("usun_obiekt");
+  InitializeCommand("raportuj_obiekt");
+  InitializeCommand("zapisz_plik_wynikowy");
 }
 
 int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
@@ -122,13 +124,15 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
       return execute_plus_in_Tcl(interp, objc, objv) ;
     } else if (commandName=="+tcltcl") {
       return execute_plus_plus_in_Tcl(interp, objc, objv) ;
-    } else if (commandName=="addToClist") {
+    } else if (commandName=="dodaj_obiekt") {
       return addToClist(interp, objc, objv) ;
-    } else if (commandName=="removeFromClist") {
+    } else if (commandName=="usun_obiekt") {
         return removeFromClist(interp, objc, objv) ;
-    } else if (commandName=="wyswietl_strukture") {
-      return wyswietl_strukture(interp, objc, objv) ;
-    } else if (commandName=="readInputDofile") {
+    } else if (commandName=="raportuj_obiekt") {
+      return displayStructure(interp, objc, objv) ;
+    } else if (commandName=="zapisz_plik_wynikowy") {
+      return writeFile(interp, objc, objv) ;
+    } else if (commandName=="wykonaj_skrypt") {
        return readInputDofile(interp, objc, objv) ;
     }
 
@@ -258,7 +262,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 
   return TCL_OK;
 }
-int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
    if (1 < objc) {
      // do poprawy
@@ -268,4 +272,17 @@ int C_Tcl_interface::wyswietl_strukture (Tcl_Interp *interp, int objc, Tcl_Obj *
 
   data_structure->display_data();
   return TCL_OK;
+}
+
+int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+   
+  if (2 != objc) {
+          Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
+          return TCL_ERROR;
+  }
+  ofstream fh;
+  fh.open(Tcl_GetString(objv[1]));
+  cout << &fh;
+  data_structure->display_data();
+  fh.close();
 }
