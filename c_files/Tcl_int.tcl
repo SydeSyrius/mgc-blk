@@ -160,7 +160,7 @@
           puts -nonewline [string range $txt 0 2047]
           set txt [string range $txt 2048 end]
           if {$wait == "wait"} {
-              after 100
+              after 1
           }
       }
   }
