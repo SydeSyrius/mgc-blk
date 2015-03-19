@@ -277,6 +277,7 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
     return TCL_ERROR;
   }
   cout << data_structure->display_data_new();
+  //data_structure->display_data();
   return TCL_OK;
 }
 

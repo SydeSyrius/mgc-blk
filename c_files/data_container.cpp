@@ -77,29 +77,52 @@ void data_container::add_new_object(string name) {
   } 
   
   bool stopSearching = false;
-  int in=0;
-  while (!stopSearching) {
+
     while (finder->next!=NULL) {
       finder=finder->next;
     }
-    
-    if (name[in]=='-') {
-      if (finder->child == NULL) {
-	if (finder->name[in-1]=='-' || in==0) {
-	  finder->child = new object(name, NULL, finder);
-	  return;
-	} else {
-	  cout<<"ERROR: no parent for object '"<<name<<" '"<<endl;
+
+    // first level
+   if (name[0]=='-') {
+      if (finder->child==NULL) {
+	if (name[1] == '-') {
+	  cout<<"ERROR: brak rodzica dla obiektu '"<<name<<" '"<<endl;
 	  exit (1);
 	}
+	// add child
+	finder->child =  new object(name, NULL, finder);
+	return;
       } else {
-	finder=finder->child;
-	in+=1;
-	continue;
+	// go one level bottom
+	finder = finder->child;
+	// go to the right
+	while (finder->next!=NULL) {
+	  finder = finder->next;
+	}
+	
+	if (name[1]=='-') {
+	  // check second level
+	  if (finder->child==NULL) {
+	    finder->child = new object(name, NULL, finder);
+	    return;
+	  } else {
+	    finder = finder->child;
+	    // go to the right
+	    while (finder->next!=NULL) {
+	      finder = finder->next;
+	    }
+	    finder->next = new object(name, finder, NULL);
+	    return;
+	  }
+	} else {
+	  // add to the end
+	  finder->next = new object(name, finder, NULL);
+	  return;
+	}
+	
       }
     }
-    stopSearching = true;
-  }
+    
   finder->next = new object(name, finder, NULL);
   
 }
