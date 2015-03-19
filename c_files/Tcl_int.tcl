@@ -11,7 +11,7 @@
   
   # Initialise our own env variables:
   foreach {var val} {
-      PROMPT ">"
+      PROMPT "KriBaL> "
       HISTORY ""
       HISTORY_BUFFER 100
       COMPLETION_MATCH ""
