@@ -7,6 +7,7 @@
 #include <fstream>
 using namespace std;  
 
+#include "memory.cpp"
 #include "object.cpp"
 #include "data_container.cpp"
 #include "cmdLine.cpp"

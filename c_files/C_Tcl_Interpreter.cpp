@@ -39,7 +39,7 @@ class C_Tcl_interface {
     int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int displayStructure(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int writeFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-
+    int memory_usage(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 };
 
 
@@ -109,6 +109,7 @@ void C_Tcl_interface::InitializeCommands() {
   InitializeCommand("usun_obiekt");
   InitializeCommand("raportuj_obiekt");
   InitializeCommand("zapisz_plik_wynikowy");
+  InitializeCommand("memory_usage");
 }
 
 int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
@@ -134,6 +135,8 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
       return writeFile(interp, objc, objv) ;
     } else if (commandName=="wykonaj_skrypt") {
        return readInputDofile(interp, objc, objv) ;
+    } else if (commandName=="memory_usage")  {
+      return memory_usage(interp, objc, objv) ;
     }
 
   
@@ -281,6 +284,16 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
   return TCL_OK;
 }
 
+int C_Tcl_interface::memory_usage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+
+   if (1 < objc) {
+     // do poprawy
+    //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
+    return TCL_ERROR;
+  }
+  cout << "Uzycie pamieci " << getValue();
+  return TCL_OK;
+}
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
    
   if (2 != objc) {

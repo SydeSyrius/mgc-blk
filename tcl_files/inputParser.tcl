@@ -69,3 +69,7 @@ proc changeLetter {letter new_letter} {
        puts "ERROR: litera nie zostala znaleziona"
   }
 }
+
+proc memoryMeasure {} {
+	puts "I used"
+}

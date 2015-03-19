@@ -165,7 +165,12 @@ void data_container::delete_object(string name) {
 				}
 			    }
 			    else { // bylem jedynakiem
-				disp->parent->child=NULL; // bez tego SIGSEGV 
+				 if (disp->previous==NULL) {
+					disp->parent->child=NULL; // bez tego SIGSEGV 
+				 }
+				 else {
+					disp->previous->next=NULL;
+				 }
 				delete disp;
 			    }
 			    return;
@@ -174,10 +179,9 @@ void data_container::delete_object(string name) {
 		}
 		//disp_top2=disp_top2->next;
 		}
-		if(0) {
+		else  {
 			if (disp_top2->next!=NULL) {
 				if (disp_top2->previous!=NULL){ // nie pierwszy
-					cout << "Jestem";
 					disp_top2->previous->next=disp_top2->next;
                                         disp_top2->next->previous=disp_top2->previous;	
 					// Del alll childs
@@ -187,10 +191,9 @@ void data_container::delete_object(string name) {
 			//			delete disp->previous;
 			//		}
 			//		delete disp;
-	  		delete disp_top2;
+	  				delete disp_top2;
 				}
 				else  {
-					
 					disp_top2->next->previous=NULL;
 					disp_top2->next->parent=disp_top2->parent; // my father is
                                         disp_top2->parent->child=disp_top2->next;
@@ -205,7 +208,12 @@ void data_container::delete_object(string name) {
 				}	
 			}
 			else { // jedynakiem
-				disp_top2->parent->child=NULL;
+				if (disp_top2->previous==NULL) {
+					disp_top2->parent->child=NULL;
+				}
+				else {
+					disp_top2->previous->next=NULL;
+				}
 				// Del alll childs
                              //     disp=disp_top2;
                               //          while (disp->next!=NULL) {
@@ -222,9 +230,47 @@ void data_container::delete_object(string name) {
       }
     }
     else {
-    // del parent 
-	cout << " Parent" ;
-        return;
+    // del parent
+	if (disp_top->next!=NULL) {
+                                if (disp_top->previous!=NULL){ // nie pierwszy
+                                        disp_top->previous->next=disp_top->next;
+                                        disp_top->next->previous=disp_top->previous;
+                                        // Del alll childs
+                                //      disp=disp_top2;
+                                //      while (disp->next!=NULL) {
+                        //                      disp=disp->next;
+                        //                      delete disp->previous;
+                        //              }
+                        //              delete disp;
+                                        delete disp_top;
+                                }
+                                else  {
+                                        disp_top->next->previous=NULL;
+					head=disp_top->next;
+                                       // Del alll childs
+                          //              disp=disp_top2;
+                            //            while (disp->next!=NULL) {
+                              //                  disp=disp->next;
+                                //                delete disp->previous;
+                                  //      }
+                                    //    delete disp;
+                                        delete disp_top;
+                                }
+                        }
+                        else { // jedynakiem
+                                if (disp_top->previous!=NULL) {
+                                        disp_top->previous->next=NULL;
+                                }
+                                // Del alll childs
+                             //     disp=disp_top2;
+                              //          while (disp->next!=NULL) {
+                               //                 disp=disp->next;
+                                //                delete disp->previous;
+                                 //       }
+                               // delete disp;
+                                delete disp_top;
+                        }
+                        return ;
 
     }
     disp_top=disp_top->next;
