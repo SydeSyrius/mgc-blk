@@ -78,7 +78,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
 	message.printError();
       } else {
 	message.printBanner();
-	cmd = "source tcl_files/tcl_init_variables.tcl\nreadInputDofile " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
+	cmd = "source tcl_files/tcl_init_variables.tcl\nwykonaj_skrypt " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
       }
     } else {
       message.printError();
@@ -241,6 +241,10 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   }
 
   row = Tcl_GetString (objv[1]);
+  // Add to tcl list first
+  string invokeProc="add_to_single_name " + row; 
+  Tcl_Eval(interp, invokeProc.c_str());
+  // Add to list
   data_structure->add_new_object(row);
   
 
@@ -253,11 +257,14 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
   string row;
 
    if (2 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
+    Tcl_WrongNumArgs (interp, 1, objv, "object name");
     return TCL_ERROR;
   }
+  
+  row=Tcl_GetString (objv[1]);
+  string invokeProc="removeFromSingle " + row;
+  Tcl_Eval(interp, invokeProc.c_str());
 
-  row = Tcl_GetString (objv[1]);
   data_structure->delete_object(row);
 
   return TCL_OK;
