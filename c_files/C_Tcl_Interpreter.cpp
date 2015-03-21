@@ -31,15 +31,12 @@ class C_Tcl_interface {
     void InitializeCommands() ;
 
     // Registered cmds
-    int readInputDofile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-    int execute_plus (int ,Tcl_Obj *CONST objv[]);
-    int execute_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-    int execute_plus_plus_in_Tcl (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    int readInputDoFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int displayStructure(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int writeFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-    int memory_usage(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    int memoryUsage(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 };
 
 
@@ -100,10 +97,6 @@ void C_Tcl_interface::InitializeCommand(string command_name) {
 
 void C_Tcl_interface::InitializeCommands() {
   // add your cammand name here to be callable from Tcl shell
-  InitializeCommand("+");
-  InitializeCommand("+tcl");
-  InitializeCommand("+tcltcl");
-  
   InitializeCommand("wykonaj_skrypt");
   InitializeCommand("dodaj_obiekt");
   InitializeCommand("usun_obiekt");
@@ -119,13 +112,7 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
     // objv[1] to objv[objc-1] -> arguments
     string commandName = Tcl_GetString(objv[0]);
     
-    if (commandName=="+") {
-      return execute_plus(objc, objv);
-    } else if (commandName=="+tcl") {
-      return execute_plus_in_Tcl(interp, objc, objv) ;
-    } else if (commandName=="+tcltcl") {
-      return execute_plus_plus_in_Tcl(interp, objc, objv) ;
-    } else if (commandName=="dodaj_obiekt") {
+    if (commandName=="dodaj_obiekt") {
       return addToClist(interp, objc, objv) ;
     } else if (commandName=="usun_obiekt") {
         return removeFromClist(interp, objc, objv) ;
@@ -134,63 +121,16 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
     } else if (commandName=="zapisz_plik_wynikowy") {
       return writeFile(interp, objc, objv) ;
     } else if (commandName=="wykonaj_skrypt") {
-       return readInputDofile(interp, objc, objv) ;
+       return readInputDoFile(interp, objc, objv) ;
     } else if (commandName=="memory_usage")  {
-      return memory_usage(interp, objc, objv) ;
+      return memoryUsage(interp, objc, objv) ;
     }
 
   
   return TCL_OK;
 }
 
-// This method is parsing arguments from Tcl interpreted and calculating result in C
-int C_Tcl_interface::execute_plus(int objc, Tcl_Obj *CONST objv[]) {
-  long n1,n2;
-  
-  if (3 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
-    return TCL_ERROR;
-  }
-
-  if (TCL_OK != Tcl_GetLongFromObj (interp, objv[1], &n1)) {
-    return TCL_ERROR;
-  }
-
-  if (TCL_OK != Tcl_GetLongFromObj (interp, objv[2], &n2)) {
-    return TCL_ERROR;
-  }
-
-  // 
-  
-  cout<<"Results is: "<< n1 + n2 <<" ."<<endl;
-  return TCL_OK;
-}
-
-// This method is linking values in Tcl and calculating results in tcl
-int C_Tcl_interface::execute_plus_in_Tcl(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  long n1,n2;
-  
-  if (3 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
-    return TCL_ERROR;
-  }
-  
-  if (TCL_OK != Tcl_GetLongFromObj (interp, objv[1], &n1)) {
-    return TCL_ERROR;
-  }
-
-  if (TCL_OK != Tcl_GetLongFromObj (interp, objv[2], &n2)) {
-    return TCL_ERROR;
-  } 
-
-  
-  Tcl_Obj *result;
-  result = Tcl_NewLongObj (n1 + n2);
-  Tcl_SetObjResult(interp, result);
-  cout<<"Results: "<<Tcl_GetStringResult (interp)<<endl;
-}
-
-int C_Tcl_interface::readInputDofile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   if (2 != objc) {
 	  Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
@@ -202,37 +142,6 @@ int C_Tcl_interface::readInputDofile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 	  return TCL_ERROR;
   }
   return 0;
-}
-
-// This method is creating string in C, that is used to be a command in Tcl_CmdDeleteProc
-int C_Tcl_interface::execute_plus_plus_in_Tcl(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  long n1,n2;
-  
-  if (3 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
-    return TCL_ERROR;
-  }
-
-  if (TCL_OK != Tcl_GetLongFromObj (interp, objv[1], &n1)) {
-    return TCL_ERROR;
-  }
-
-  if (TCL_OK != Tcl_GetLongFromObj (interp, objv[2], &n2)) {
-    return TCL_ERROR;
-  } 
-  
-  
-  Tcl_Obj *result;
-  // string command = "puts [expr " + n1 + " " + n2 + " ] ";
-  stringstream new_stream;
-  string command ;
-   
-  // create string line 
-  new_stream << "puts \"Resutsl : [expr " << n1 << " + " << n2 << " ] \" ";
-  command = new_stream.str();
-
-  Tcl_Eval(interp, command.c_str());
-  return TCL_OK;
 }
 
 int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
@@ -284,7 +193,7 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
   return TCL_OK;
 }
 
-int C_Tcl_interface::memory_usage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
    if (1 < objc) {
      // do poprawy
@@ -294,6 +203,7 @@ int C_Tcl_interface::memory_usage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST 
   cout << "Uzycie pamieci " << getValue();
   return TCL_OK;
 }
+
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
    
   if (2 != objc) {
