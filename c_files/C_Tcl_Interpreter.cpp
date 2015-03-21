@@ -159,7 +159,6 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   // Add to list
   data_structure->add_new_object(row);
   
-
 //  Tcl_Eval(interp, command.c_str());
   return TCL_OK;
 }

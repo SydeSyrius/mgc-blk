@@ -1,4 +1,8 @@
-# This code is just to report virual memory usage
+// This code is just to report virual memory usage
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
     int parseLine(char* line){
         int i = strlen(line);
