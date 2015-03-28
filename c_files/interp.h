@@ -11,6 +11,7 @@ using namespace std;
 #include "memory.cpp"
 #include "object.cpp"
 #include "data_container.cpp"
+#include "data_container_new.cpp"
 #include "cmdLine.cpp"
 #include "C_Tcl_Interpreter.cpp"
 
