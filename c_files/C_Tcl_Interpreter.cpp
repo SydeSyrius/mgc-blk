@@ -16,7 +16,8 @@
 class C_Tcl_interface {
     public:
     Tcl_Interp *interp;
-    data_container *data_structure;
+    Object *root;
+
     int argss_n; 
     cmdLineMessage message;
     
@@ -48,7 +49,7 @@ C_Tcl_interface :: C_Tcl_interface () {
     exit (EXIT_FAILURE);
   }
   
-  data_structure = new data_container();
+  root = new Object();
 }
 
 void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
@@ -69,13 +70,13 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
     } else {
       message.printHelp();
     } 
-  } else if (argv[1] == std::string("-skrypt")) {
+  } else if (argv[1] == std::string("-execute_script")) {
     if (argv[2] != NULL) {
       if (argc>3){
 	message.printError();
       } else {
 	message.printBanner();
-	cmd = "source tcl_files/tcl_init_variables.tcl\nwykonaj_skrypt " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
+	cmd = "source tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
       }
     } else {
       message.printError();
@@ -97,11 +98,11 @@ void C_Tcl_interface::InitializeCommand(string command_name) {
 
 void C_Tcl_interface::InitializeCommands() {
   // add your cammand name here to be callable from Tcl shell
-  InitializeCommand("wykonaj_skrypt");
-  InitializeCommand("dodaj_obiekt");
-  InitializeCommand("usun_obiekt");
-  InitializeCommand("raportuj_obiekt");
-  InitializeCommand("zapisz_plik_wynikowy");
+  InitializeCommand("execute_script");
+  InitializeCommand("add_object");
+  InitializeCommand("delete_object");
+  InitializeCommand("display_object");
+  InitializeCommand("write_file");
   InitializeCommand("memory_usage");
 }
 
@@ -112,15 +113,15 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
     // objv[1] to objv[objc-1] -> arguments
     string commandName = Tcl_GetString(objv[0]);
     
-    if (commandName=="dodaj_obiekt") {
+    if (commandName=="add_object") {
       return addToClist(interp, objc, objv) ;
-    } else if (commandName=="usun_obiekt") {
+    } else if (commandName=="delete_object") {
         return removeFromClist(interp, objc, objv) ;
-    } else if (commandName=="raportuj_obiekt") {
+    } else if (commandName=="display_object") {
       return displayStructure(interp, objc, objv) ;
-    } else if (commandName=="zapisz_plik_wynikowy") {
+    } else if (commandName=="write_file") {
       return writeFile(interp, objc, objv) ;
-    } else if (commandName=="wykonaj_skrypt") {
+    } else if (commandName=="execute_script") {
        return readInputDoFile(interp, objc, objv) ;
     } else if (commandName=="memory_usage")  {
       return memoryUsage(interp, objc, objv) ;
@@ -137,7 +138,7 @@ int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 	  return TCL_ERROR;
   }
 
-  cout<<"Wykonuje skrypt "<<  Tcl_GetString(objv[1]) << endl ;
+  cout<<"Executing: "<<  Tcl_GetString(objv[1]) << endl ;
   if (TCL_OK != Tcl_EvalFile(interp,Tcl_GetString(objv[1]))) {
 	  return TCL_ERROR;
   }
@@ -145,62 +146,118 @@ int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 }
 
 int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  string row;
 
-   if (2 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "n1 n2");
+  string object;
+   // add_object <string> [-below <string>]
+  if ((2 != objc) & (4 != objc)) {
+    Tcl_WrongNumArgs (interp, 1, objv, "<string> [ -below <string> ]");
     return TCL_ERROR;
   }
 
-  row = Tcl_GetString (objv[1]);
+  cout << Tcl_GetString(objv[0]) << endl;
+  // string - object
+  object = Tcl_GetString (objv[1]);
+
   // Add to tcl list first
-  string invokeProc="add_to_single_name " + row; 
+  string invokeProc="add_to_single_name " + object; 
   Tcl_Eval(interp, invokeProc.c_str());
-  // Add to list
-  data_structure->add_new_object(row);
-  
-//  Tcl_Eval(interp, command.c_str());
+
+  string parent=Tcl_GetString (objv[2]);
+  string child=Tcl_GetString (objv[3]);
+  Object *tmp;
+  // Adding parent (no below)
+  if (parent=="") {
+ 	root->addChild(object,"");
+  } else {
+	tmp=root->findChild(parent);
+	if (tmp == NULL ) {
+		cout << "Wrong hierarchy" << endl;
+	} else {
+		if (child=="") {
+			tmp->addChild(object, "-");
+		} else {
+			tmp = tmp->findChild(child);
+			if (tmp == NULL) {
+				   cout << "Wrong hierarchy" << endl;
+			} else {
+				tmp->addChild(object, "--");
+			}
+		}
+	}
+  }
   return TCL_OK;
 }
 
 int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-	// del object
-  string row;
 
-   if (2 != objc) {
+  string object;
+
+  if (4 != objc) {
     Tcl_WrongNumArgs (interp, 1, objv, "object name");
     return TCL_ERROR;
   }
   
-  row=Tcl_GetString (objv[1]);
-  string invokeProc="removeFromSingle " + row;
+  string parent=Tcl_GetString (objv[2]);
+  string child=Tcl_GetString (objv[3]);
+  Object *tmp;
+  // Adding parent (no below)
+  if (parent=="") {
+        root->removeChild();
+  } else {
+        tmp=root->findChild(parent);
+        if (tmp == NULL ) {
+		   cout << "Wrong hierarchy" << endl;
+        } else {
+                if (child=="") {
+                        tmp->removeChild();
+                } else {
+                        tmp = tmp->findChild(child);
+                        if (tmp == NULL) {
+				 cout << "Wrong hierarchy" << endl;
+                        } else {
+                                tmp->removeChild();
+                        }
+                }
+        }
+  }
+ 
+  object=Tcl_GetString (objv[1]);
+  string invokeProc="removeFromSingle " + object;
   Tcl_Eval(interp, invokeProc.c_str());
-
-  data_structure->delete_object(row);
-
-  return TCL_OK;
+  
+return TCL_OK;
 }
+
 int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
-   if (1 < objc) {
-     // do poprawy
-    //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
+   if (1!=objc & 4 != objc) {
+    Tcl_WrongNumArgs (interp, 1, objv, "object name");
     return TCL_ERROR;
   }
-  cout << data_structure->display_data_new();
-  //data_structure->display_data();
-  return TCL_OK;
-}
-
-int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-
-   if (1 < objc) {
-     // do poprawy
-    //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
-    return TCL_ERROR;
+   Object* tmp;
+   string parent=Tcl_GetString(objv[2]);
+   string child=Tcl_GetString(objv[3]);
+   if (parent=="") {
+        root->printName();
+   } else {
+        tmp=root->findChild(parent);
+        if (tmp == NULL ) {
+                   cout << "Wrong hierarchy" << endl;
+        } else {
+                if (child=="") {
+                        tmp->printName();
+                } else {
+                        tmp = tmp->findChild(child);
+                        if (tmp == NULL) {
+                                 cout << "Wrong hierarchy" << endl;
+                        } else {
+                                tmp->printName();
+                        }
+                }
+        }
   }
-  cout << "Uzycie pamieci " << getValue();
-  return TCL_OK;
+
+   return TCL_OK;
 }
 
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
@@ -211,6 +268,18 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   }
   ofstream fh;
   fh.open(Tcl_GetString(objv[1]));
-  fh<<data_structure->display_data_new();
+   cout << "Print to file" << endl;
+  //fh<<listContent();
   fh.close();
+}
+
+int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+
+   if (1 < objc) {
+     // do poprawy
+    //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
+    return TCL_ERROR;
+  }
+  cout << "Memory usage " << getValue() << endl;
+  return TCL_OK;
 }

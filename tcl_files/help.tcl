@@ -1,11 +1,11 @@
 proc help {} {
-	puts "Dostepne komendy"
+	puts "Commands:"
 	puts "################"
-	puts "wczytaj_plik_wejsciowy <nazwa_pliku>"
-	puts "zapisz_plik_wynikowy <nazwa_pliku>"
-	puts "wykonaj_skrypt <nazwa_skryptu>"
-	puts "raportuj_obiekt -sciezka <string>"
-	puts "usun_obiekt <nazwa>"
-	puts "dodaj_obiekt <nazwa> -sciezka <string>"
+	puts "read_file <string>"
+	puts "write_file <string>"
+	puts "execute_script <string>"
+	puts "display_object -below <string>"
+	puts "delete_object <string>"
+	puts "add_object <string> \[-below <string>\]"
 	puts "zmien_litere"
 }
