@@ -1,4 +1,10 @@
 
+proc checkNameSyntax {nameToCheck} {
+  if {![regexp {^[A-Za-z]+$} $nameToCheck tmp parent]} {
+    puts "ERROR: syntax error '$nameToCheck'"
+  }
+}
+
 proc read_file {file_name} {
   if {![file exist $file_name]} {
     puts "ERROR: file '$file_name' does not exist."
@@ -41,6 +47,8 @@ proc add_to_single_name {component_name} {
     exit 1
   }
 }
+
+
 
 proc display_single_name {name_list} {
 }
