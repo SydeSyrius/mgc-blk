@@ -30,7 +30,7 @@ class C_Tcl_interface {
     void tcl_main(int argc, char* argv[]);
     void InitializeCommand(string) ;
     void InitializeCommands() ;
-
+    void getHierarchyTable (string option, string hierarchy, string (&hierarchyTable)[10]);
     // Registered cmds
     int readInputDoFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
@@ -144,26 +144,54 @@ int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
   }
   return 0;
 }
+  
+void  C_Tcl_interface::getHierarchyTable (string option, string hierarchy, string (&hierarchyTable)[10]) {
+  if (option!="-below")  {
+    return;
+  }
+  
+  int startString = 0;
+  int index = 0;
+  size_t findIndex =hierarchy.find("/");
+  
+  while (findIndex != string::npos) {    
+    startString = startString;
+
+    hierarchyTable[index] = hierarchy.substr(startString,findIndex);
+    hierarchy.replace(0,findIndex+1,"");
+    index++;
+    findIndex = hierarchy.find("/");
+  }
+  hierarchyTable[index] = hierarchy;
+}
 
 int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-
   string object;
    // add_object <string> [-below <string>]
   if ((2 != objc) & (4 != objc)) {
     Tcl_WrongNumArgs (interp, 1, objv, "<string> [ -below <string> ]");
     return TCL_ERROR;
-  }
+  } 
 
-  cout << Tcl_GetString(objv[0]) << endl;
   // string - object
   object = Tcl_GetString (objv[1]);
 
   // Add to tcl list first
   string invokeProc="add_to_single_name " + object; 
   Tcl_Eval(interp, invokeProc.c_str());
+  // good place to insert bug :D
+  string hierarchyTable[10]="";
 
-  string parent=Tcl_GetString (objv[2]);
-  string child=Tcl_GetString (objv[3]);
+  // according to LR present version
+  string parent = "";
+  string child  = "";
+
+  if (4 == objc) {
+    getHierarchyTable(Tcl_GetString(objv[2]), Tcl_GetString (objv[3]), hierarchyTable);
+    string parent = hierarchyTable[0];
+    string child  = hierarchyTable[1]; 
+  }
+cout<<"p: "<<parent<<"|c: "<<child<<endl;
   Object *tmp;
   // Adding parent (no below)
   if (parent=="") {
