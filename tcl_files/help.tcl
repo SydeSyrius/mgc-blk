@@ -7,4 +7,5 @@ proc help {} {
 	puts "display_object \[-below <string\[/string\]>\]"
 	puts "delete_object <string> \[-below <string\[/string\]\]"
 	puts "add_object <string> \[-below <string\[/string\]>\]"
+	puts "exit"
 }

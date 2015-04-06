@@ -75,10 +75,10 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   } else if (argv[1] == std::string("-execute_script")) {
     if (argv[2] != NULL) {
       if (argc>3){
-	message.printError();
+				message.printError();
       } else {
-	message.printBanner();
-	cmd = "source tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
+				message.printBanner();
+				cmd = "source tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
       }
     } else {
       message.printError();
@@ -175,6 +175,7 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
     return TCL_ERROR;
   } 
 
+//	string validateCmd="validateCmdLine";
   // string - object
   object = Tcl_GetString (objv[1]);
 

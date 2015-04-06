@@ -21,29 +21,47 @@ proc read_file {file_name} {
     set single_line_no_space [string trim $single_line]
     if {[regexp {^[A-Za-z]+$} $single_line_no_space tmp parent]} {
       #puts "This is a parent name $parent"
-      add_object $single_line_no_space
+			set parent $single_line_no_space
+      add_object $parent
+			if {[info exists child]} {
+				unset child 
+			}
     } elseif {[regexp {^-[A-Za-z]+$} $single_line_no_space tmp first_child]} {
       #puts "This is a first child $first_child"
-      add_object $single_line_no_space
+			regsub -nocase "\\-" $single_line_no_space "" child
+			if {![info exists parent]} {
+				puts "\[ERROR\] Wrong hierarchy"
+				delete_object
+				return 1
+			}
+      add_object $child -below $parent
     } elseif {[regexp {^--[A-Za-z]+$} $single_line_no_space tmp second_child]} {
       #puts "This is a first child $second_child"
-      add_object $single_line_no_space
+			regsub -nocase "\\--" $single_line_no_space "" childChild 
+			if {![info exists child]} {
+        puts "\[ERROR\] Wrong hierarchy"
+				delete_object
+				return 1
+			}
+      puts "add_object $childChild -below $parent/$child"
     } elseif {[regexp {^$} $single_line_no_space]} {
       #puts "Can be ignored" - empty line
     } else {
       puts "\[ERROR\] Syntax error in line '$single_line'."
-      exit 1
+      return 1
       #puts "This is a syntax error"
     }
   }
 
 }
+proc validate_cmd_line {component_name} {
+	
+}
 
 proc add_to_single_name {component_name} {
   global name_list
-  regsub -nocase "\\-" $component_name "" component_no_minus
-  if {$component_no_minus ni $name_list(original)} {
-    append name_list(original) "$component_no_minus  "
+  if {$component_name ni $name_list(original)} {
+    append name_list(original) "$component_name  "
   } else {
     puts "\[ERROR\] Name already exists '$component_name'."
     exit 0
