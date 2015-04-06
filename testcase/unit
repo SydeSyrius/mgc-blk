@@ -1,0 +1,86 @@
+puts "Dodawanie - pozytywne"
+################################
+if {[file exists nowy_pusty]} {
+  puts "istnieje - kasuje"
+  catch [file delete nowy_pusty]
+}
+catch "write_file nowy_pusty"
+if {[file exists nowy_pusty]} {
+  puts "Error - should not be there"
+  catch [file delete nowy_pusty]
+}
+###############################
+add_object ABC 
+add_object CDE
+add_object ab -below ABC
+add_object cd -below ABC
+add_object a -below ABC/ab
+add_object b -below ABC/ab
+display_object
+puts "TCL list full: $name_list(original)"
+if {[file exists nowy]} {
+	puts "istnieje - kasuje" 
+	catch [file delete nowy]
+}
+puts "Save file"
+write_file nowy
+## Display file content
+puts "File content"
+puts [read [open nowy r]]
+#################################
+delete_object "" "" ""
+puts "TCL list - empty: $name_list(original)"
+display_object
+read_file nowy
+puts "TCL list - full: $name_list(original)"
+display_object
+puts "Should be ok"
+delete_object "" "" ""
+puts "TCL list -empty: $name_list(original)"
+puts "Empty again"
+if {[file exists nowy_pusty]} {
+  puts "istnieje - kasuje"
+  catch [file delete nowy_pusty]
+}
+## Display file content
+catch "write_file nowy_pusty"
+if {[file exists nowy_pusty]} {
+  puts "Error - should not be there"
+  catch [file delete nowy_pusty]
+}
+add_object new 
+add_object newchild -below new
+add_object newchildchild -below new
+display_object
+delete_object "" "" "" 
+display_object
+
+add_object ABC
+display_object
+# Reading empty file - will prove that existing llist has been removed
+read_file empty
+display_object
+## negative - add_object 
+if {[catch "add_object"]} {
+	puts "Correct exit code"
+} else {
+	puts "ERROR - wrong exit code - needs argument" 
+}
+
+if {[catch "add_object 1"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code - should be string"
+}
+
+if {[catch "add_object ."]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code - should be string"
+}
+
+if {[catch "add_object -below aa aa"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
