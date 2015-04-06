@@ -14,6 +14,6 @@ public:
 	Object* findChild(const string& name);
 	void addChild(const string& name, const string& level);
 	void removeChild();
-	void printName();
+	void printName(string& outputString);
 };
 

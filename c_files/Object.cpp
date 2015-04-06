@@ -48,10 +48,12 @@ void Object::removeChild(){
 	child = NULL;
 }
 
-void Object::printName(){
+void Object::printName(string& outputString){
 	Object* tmp = child;
-	cout << this->myLevel << this->myName << endl;
-        for (; tmp != NULL; tmp = tmp->next) {
-                tmp->printName();
-        }
+	if (this->myName != "") { // Root has empty name
+		outputString+=this->myLevel+this->myName+"\n";
+	}
+	for (; tmp != NULL; tmp = tmp->next) {
+  	tmp->printName(outputString);
+	}
 }

@@ -2,7 +2,7 @@
 
 class cmdLineMessage {
 public:
-	std::string toolName="KriBaL";
+	std::string toolName="testingDojo";
 
 	void printBanner();
 	void printHelp();
@@ -11,9 +11,9 @@ public:
 
 void cmdLineMessage::printHelp() {
 	cout << endl;
-	cout << toolName << " 					-> uruchomienie w trybie interaktywnym" << endl;
-	cout << toolName << "-skrypt <nazwa> 	-> uruchomienie w trybie interaktywnym z automatycznym startem" << endl;
-	cout << toolName << "-help 				-> wyswietla pomoc" << endl;
+	cout << toolName << "													-> interactive mode" << endl;
+	cout << toolName << "-execute_script <string>	-> interactive mode with automated script execution" << endl;
+	cout << toolName << "-help										-> display help" << endl;
 	cout << endl;
 	exit (0);
 }
@@ -27,7 +27,7 @@ void cmdLineMessage::printBanner() {
 
 void cmdLineMessage::printError() {
 	cout << endl;
-	cout << "Blad - zobacz -help" << endl;
+	cout << "[ERROR] Syntax error - try testingDojo -help" << endl;
 	cout << endl;
 	exit (1);
 }

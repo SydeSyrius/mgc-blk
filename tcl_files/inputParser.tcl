@@ -1,13 +1,13 @@
 
 proc checkNameSyntax {nameToCheck} {
   if {![regexp {^[A-Za-z]+$} $nameToCheck tmp parent]} {
-    puts "ERROR: syntax error '$nameToCheck'"
+    puts "\[ERROR\] Syntax error '$nameToCheck'"
   }
 }
 
 proc read_file {file_name} {
   if {![file exist $file_name]} {
-    puts "ERROR: file '$file_name' does not exist."
+    puts "\[ERROR\]: File '$file_name' does not exist."
     exit 1
   }
   global name_list
@@ -29,7 +29,7 @@ proc read_file {file_name} {
     } elseif {[regexp {^$} $single_line_no_space]} {
       #puts "Can be ignored" - empty line
     } else {
-      puts "ERROR: syntax error in line '$single_line'."
+      puts "\[ERROR\] Syntax error in line '$single_line'."
       exit 1
       #puts "This is a syntax error"
     }
@@ -43,8 +43,8 @@ proc add_to_single_name {component_name} {
   if {$component_no_minus ni $name_list(original)} {
     append name_list(original) "$component_no_minus  "
   } else {
-    puts "ERROR: name already exists '$component_name'."
-    exit 1
+    puts "\[ERROR\] Name already exists '$component_name'."
+    exit 0
   }
 }
 
@@ -58,7 +58,7 @@ proc removeFromSingle {component_name} {
   regsub -nocase "\\-" $component_name "" component_no_minus
   set index [lsearch -exact $name_list(original) $component_no_minus]
   if { $index == -1 } {
-	puts "ERROR: object does not exist."
+	puts "\[ERROR\] Object does not exist."
   } else {
         set name_list(original) [lreplace $name_list(original) $index $index]
   }
@@ -68,13 +68,12 @@ proc changeLetter {letter new_letter} {
   global name_list
   if { [regsub -all "$letter" $name_list(original) "$new_letter" name_list(tmp)]} {
   	if { [llength [lsort $name_list(tmp)]] != [llength [lsort -unique $name_list(tmp)]] } {
-		puts "ERROR: duplicated name." 
+		puts "\[ERROR\] Duplicated name." 
 	  } else {
-		puts "Ok"
 		set $name_list(original) $name_list(tmp)
 	  }
   } else {
-       puts "ERROR: cannot find this letter."
+       puts "\[ERROR\] Cannot find this letter."
   }
 }
 
