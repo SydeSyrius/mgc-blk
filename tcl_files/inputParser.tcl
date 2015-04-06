@@ -54,17 +54,36 @@ proc read_file {file_name} {
   }
 
 }
-proc validate_cmd_line {component_name} {
-	
+proc validateCmdLine_addObject {component_name} {
+	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
+		puts "\[ERROR\]: Syntax error"
+	  return TCL_ERROR
+	} 
+	return TCL_OK
 }
 
+proc validateCmdLine_deleteObject {component_name} {
+  if {![regexp {^\s*([A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*)*\s*$} $component_name]} {
+    puts "\[ERROR\]: Syntax error"
+    return TCL_ERROR
+  }
+  return TCL_OK
+}
+
+proc validateCmdLine_displayObject {component_name} {
+	if {![regexp {^\s*(-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
+		puts "\[ERROR\]: Syntax error"
+		return TCL_ERROR
+	}
+	return TCL_OK
+}
 proc add_to_single_name {component_name} {
   global name_list
   if {$component_name ni $name_list(original)} {
     append name_list(original) "$component_name  "
   } else {
     puts "\[ERROR\] Name already exists '$component_name'."
-    exit 0
+    return TCL_ERROR
   }
 }
 

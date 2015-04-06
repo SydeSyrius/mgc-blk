@@ -11,9 +11,9 @@ public:
 
 void cmdLineMessage::printHelp() {
 	cout << endl;
-	cout << toolName << "													-> interactive mode" << endl;
-	cout << toolName << "-execute_script <string>	-> interactive mode with automated script execution" << endl;
-	cout << toolName << "-help										-> display help" << endl;
+	cout << toolName << "				-> interactive mode" << endl;
+	cout << toolName << " -execute_script <string>	-> interactive mode with automated script execution" << endl;
+	cout << toolName << " -help		 	-> display help" << endl;
 	cout << endl;
 	exit (0);
 }

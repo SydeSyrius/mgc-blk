@@ -169,13 +169,22 @@ void  C_Tcl_interface::getHierarchyTable (string option, string hierarchy, strin
 
 int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
   string object;
+	string cmdArgs;
+
    // add_object <string> [-below <string>]
   if ((2 != objc) & (4 != objc)) {
     Tcl_WrongNumArgs (interp, 1, objv, "<string> [ -below <string> ]");
     return TCL_ERROR;
-  } 
-
-//	string validateCmd="validateCmdLine";
+  } else {
+		cmdArgs=Tcl_GetString (objv[1]);
+		if (4 == objc) {
+			cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
+		}
+		string validateCmd="validateCmdLine_addObject {" + cmdArgs + "}";
+		if(Tcl_Eval(interp,validateCmd.c_str())==TCL_ERROR) {
+			exit (1);
+		}
+	}
   // string - object
   object = Tcl_GetString (objv[1]);
 
@@ -220,16 +229,24 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   string object="";
-
+	string cmdArgs;
 	if ((1!= objc) & (2 != objc) & (4 != objc)) {
     Tcl_WrongNumArgs (interp, 1, objv, "[<string>] [ -below <string> ]");
     return TCL_ERROR;
+  } else {
+    if (objc > 1) {
+			cmdArgs=Tcl_GetString (objv[1]);
+			object = Tcl_GetString (objv[1]);
+		}
+    if (4 == objc) {
+      cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
+    }
+    string validateCmd="validateCmdLine_deleteObject {" + cmdArgs + "}";
+    if(Tcl_Eval(interp,validateCmd.c_str())==TCL_ERROR) {
+      exit (1);
+    }
   }
- 
-	// string - object
-	if (objc !=1) {
-	  object = Tcl_GetString (objv[1]);
-	}
+	
 	// good place to insert bug :D
   string hierarchyTable[10]="";
 
@@ -271,9 +288,18 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 
 int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
+	string cmdArgs;
   if (1!=objc & 3 != objc) {
     Tcl_WrongNumArgs (interp, 1, objv, "object name");
     return TCL_ERROR;
+  } else {
+    if (3 == objc) {
+      cmdArgs=cmdArgs + " " + Tcl_GetString(objv[1]) + " " + Tcl_GetString(objv[2]);
+    }
+    string validateCmd="validateCmdLine_displayObject {" + cmdArgs + "}";
+    if(Tcl_Eval(interp,validateCmd.c_str())==TCL_ERROR) {
+			exit (1);
+    }
   }
 
 	// good place to insert bug :D
