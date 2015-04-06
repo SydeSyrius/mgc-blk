@@ -218,13 +218,17 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 
 int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
-  string object;
+  string object="";
 
-  if (4 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "object name");
+	if ((1!= objc) & (2 != objc) & (4 != objc)) {
+    Tcl_WrongNumArgs (interp, 1, objv, "[<string>] [ -below <string> ]");
     return TCL_ERROR;
   }
  
+	// string - object
+	if (objc !=1) {
+	  object = Tcl_GetString (objv[1]);
+	}
 	// good place to insert bug :D
   string hierarchyTable[10]="";
 
@@ -234,32 +238,31 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
     getHierarchyTable(Tcl_GetString(objv[2]), Tcl_GetString (objv[3]), hierarchyTable);
     parent = hierarchyTable[0];
     child  = hierarchyTable[1];
-  }
+  } 
  
+	string toRemove;
   Object *tmp;
   // Adding parent (no below)
   if (parent=="") {
-		root->removeChild();
+		root->removeChild(toRemove);
   } else {
 		tmp=root->findChild(parent);
 		if (tmp == NULL ) {
 			cout << "Wrong hierarchy" << endl;
 		} else {
 			if (child=="") {
-				tmp->removeChild();
+				tmp->removeChild(toRemove);
 			} else {
 				tmp = tmp->findChild(child);
 				if (tmp == NULL) {
 					cout << "Wrong hierarchy" << endl;
 				} else {
-					tmp->removeChild();
+					tmp->removeChild(toRemove);
 				}
 			}
 		}
 	}
- 
-  object=Tcl_GetString (objv[1]);
-  string invokeProc="removeFromSingle " + object;
+  string invokeProc="removeFromSingle {" + toRemove + "}";
   Tcl_Eval(interp, invokeProc.c_str());
   
 	return TCL_OK;
@@ -313,16 +316,24 @@ void C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CON
 
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
    
+  if (root->child==NULL) { // Ugly 
+		cout << "[ERROR] Nothing to save" << endl;
+		return 1;
+  }
   if (2 != objc) {
           Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
           return TCL_ERROR;
   }
-	string outputString="";
-  ofstream fh(Tcl_GetString(objv[1]));
-  
-  printStructure(interp, objc, objv, outputString, "", "");
-	fh<<outputString;
-	fh.close();
+	
+	if (Tcl_Eval(interp, Tcl_GetString(objv[1]))) {
+		string outputString="";
+  	ofstream fh(Tcl_GetString(objv[1]));
+    printStructure(interp, objc, objv, outputString, "", "");
+		fh<<outputString;
+		fh.close();
+	} else {
+		cout << "[ERROR} File already exists" << endl;
+	}
 }
 
 int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {

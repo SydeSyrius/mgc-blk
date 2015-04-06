@@ -38,10 +38,11 @@ void Object::addChild(const string& name, const string& level){
 	}
 }
 
-void Object::removeChild(){
+void Object::removeChild(string& toRemove){
 	Object* tmp = child;
+	toRemove+=myName+" ";
 	for (; tmp != NULL; tmp = tmp->next) {
-		tmp->removeChild();
+		tmp->removeChild(toRemove);
 		delete tmp->previous;
 	}
 	delete tmp;

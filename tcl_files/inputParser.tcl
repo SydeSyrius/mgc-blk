@@ -10,6 +10,8 @@ proc read_file {file_name} {
     puts "\[ERROR\]: File '$file_name' does not exist."
     exit 1
   }
+	# First remove everything from memory
+	delete_object
   global name_list
   # Open file
   set fh [open $file_name r]
@@ -48,20 +50,16 @@ proc add_to_single_name {component_name} {
   }
 }
 
-
-
-proc display_single_name {name_list} {
-}
-
 proc removeFromSingle {component_name} {
   global name_list
-  regsub -nocase "\\-" $component_name "" component_no_minus
-  set index [lsearch -exact $name_list(original) $component_no_minus]
-  if { $index == -1 } {
-	puts "\[ERROR\] Object does not exist."
-  } else {
-        set name_list(original) [lreplace $name_list(original) $index $index]
-  }
+	foreach removeInstance $component_name {
+	  set index [lsearch -exact $name_list(original) $removeInstance]
+  		if { $index == -1 } {
+				puts "\[ERROR\] Object does not exist."
+  		} else {
+    		set name_list(original) [lreplace $name_list(original) $index $index]
+  		}
+	}
 }
 
 proc changeLetter {letter new_letter} {
