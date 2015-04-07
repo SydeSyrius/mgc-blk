@@ -52,7 +52,6 @@ proc read_file {file_name} {
       #puts "This is a syntax error"
     }
   }
-
 }
 proc validateCmdLine_addObject {component_name} {
 	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {

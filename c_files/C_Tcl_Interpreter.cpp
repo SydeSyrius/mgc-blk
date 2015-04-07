@@ -136,7 +136,7 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   if (2 != objc) {
-	  Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
+	  Tcl_WrongNumArgs (interp, 1, objv, "<string>");
 	  return TCL_ERROR;
   }
 
