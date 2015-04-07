@@ -189,9 +189,7 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 			cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
 		}
 		string validateCmd="validateCmdLine_addObject {" + cmdArgs + "}";
-		Tcl_Eval(interp,validateCmd.c_str());
-		if(Tcl_GetStringResult(interp)) {
-			cout << "ddd" << endl;
+		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
 			return 1;
 		}
 	}
@@ -252,7 +250,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
     }
     string validateCmd="validateCmdLine_deleteObject {" + cmdArgs + "}";
-		if(TCL_OK!=Tcl_GetStringResult(interp)) {
+		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
       return 1;
     }
   }
@@ -307,10 +305,10 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[1]) + " " + Tcl_GetString(objv[2]);
     }
     string validateCmd="validateCmdLine_displayObject {" + cmdArgs + "}";
-		Tcl_Eval(interp,validateCmd.c_str());
-		if(TCL_OK!=Tcl_GetStringResult(interp)) {
+		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
       return 1;
     }
+
   }
 
 	// good place to insert bug :D

@@ -54,24 +54,24 @@ proc read_file {file_name} {
   }
 }
 proc validateCmdLine_addObject {component_name} {
-	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
-		puts "\[ERROR\]: Syntax error."
+	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+){0,1})*\s*$} $component_name]} {
+		puts "\[ERROR\] Syntax error."
 	  return TCL_ERROR
 	}
 	return TCL_OK
 }
 
 proc validateCmdLine_deleteObject {component_name} {
-  if {![regexp {^\s*([A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*)*\s*$} $component_name]} {
-    puts "\[ERROR\]: Syntax error."
+  if {![regexp {^\s*([A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+){0,1})*)*\s*$} $component_name]} {
+    puts "\[ERROR\] Syntax error."
     return TCL_ERROR
   }
   return TCL_OK
 }
 
 proc validateCmdLine_displayObject {component_name} {
-	if {![regexp {^\s*(-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
-		puts "\[ERROR\]: Syntax error."
+	if {![regexp {^\s*(-below\s+[A-Za-z]+(/[A-Za-z]+){0,1})*\s*$} $component_name]} {
+		puts "\[ERROR\] Syntax error."
 		return TCL_ERROR
 	}
 	return TCL_OK
