@@ -17,25 +17,27 @@ add_object cd -below ABC
 add_object a -below ABC/ab
 add_object b -below ABC/ab
 display_object
+display_object -below ABC/ab
 puts "TCL list full: $name_list(original)"
 if {[file exists nowy]} {
 	puts "istnieje - kasuje" 
 	catch [file delete nowy]
 }
 puts "Save file"
-write_file nowy
+puts "TCL list full: $name_list(original)"
+catch "write_file nowy"
 ## Display file content
 puts "File content"
 puts [read [open nowy r]]
 #################################
-delete_object "" "" ""
+delete_object 
 puts "TCL list - empty: $name_list(original)"
 display_object
 read_file nowy
 puts "TCL list - full: $name_list(original)"
 display_object
 puts "Should be ok"
-delete_object "" "" ""
+delete_object 
 puts "TCL list -empty: $name_list(original)"
 puts "Empty again"
 if {[file exists nowy_pusty]} {
@@ -43,6 +45,7 @@ if {[file exists nowy_pusty]} {
   catch [file delete nowy_pusty]
 }
 ## Display file content
+puts "Here"
 catch "write_file nowy_pusty"
 if {[file exists nowy_pusty]} {
   puts "Error - should not be there"
@@ -52,35 +55,120 @@ add_object new
 add_object newchild -below new
 add_object newchildchild -below new
 display_object
-delete_object "" "" "" 
+delete_object 
 display_object
 
 add_object ABC
 display_object
 # Reading empty file - will prove that existing llist has been removed
-read_file empty
+read_file testy/empty
 display_object
 ## negative - add_object 
+puts "Negative for add_object"
+puts "add_object"
 if {[catch "add_object"]} {
 	puts "Correct exit code"
 } else {
 	puts "ERROR - wrong exit code - needs argument" 
 }
-
+puts "add_object 1"
 if {[catch "add_object 1"]} {
   puts "Correct exit code"
 } else {
   puts "ERROR - wrong exit code - should be string"
 }
-
+puts "add_object ."
 if {[catch "add_object ."]} {
   puts "Correct exit code"
 } else {
   puts "ERROR - wrong exit code - should be string"
 }
-
+puts "add_object -below aa aa"
 if {[catch "add_object -below aa aa"]} {
   puts "Correct exit code"
 } else {
   puts "ERROR - wrong exit code"
 }
+puts "add_object aa -below"
+if {[catch "add_object aa -below"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+puts "add_object aa -belo aa"
+if {[catch "add_object aa -belo aa"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+puts "add_object a -below aa/"
+if {[catch "add_object a -below aa/"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+puts "add_object a -below aa//aa"
+if {[catch "add_object a -below aa//aa"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+puts "add_object ok -below not"
+if {[catch "add_object ok -below not"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+puts "add_object ok2 -below not/not"
+if {[catch "add_object ok2 -below not/not"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+
+
+puts "Negative for display_object"
+if {[catch "display_object a -below"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object a -belo a"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object -below"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object -below ."]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object -below a/"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object -below /"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object -below not"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+if {[catch "display_object -below not/not"]} {
+  puts "Correct exit code"
+} else {
+  puts "ERROR - wrong exit code"
+}
+
+
+
+
