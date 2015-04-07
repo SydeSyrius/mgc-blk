@@ -27,7 +27,7 @@ void cmdLineMessage::printBanner() {
 
 void cmdLineMessage::printError() {
 	cout << endl;
-	cout << "[ERROR] Syntax error - try testingDojo -help" << endl;
+	cout << "[ERROR] Syntax error. Please try '" << toolName << " -help'." << endl;
 	cout << endl;
 	exit (1);
 }

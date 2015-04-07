@@ -181,8 +181,9 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 			cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
 		}
 		string validateCmd="validateCmdLine_addObject {" + cmdArgs + "}";
-		if(Tcl_Eval(interp,validateCmd.c_str())==TCL_ERROR) {
-			exit (1);
+		if(TCL_OK!=Tcl_Eval(interp,validateCmd.c_str())) {
+			cout << "[ERROR] Syntax error."<<endl;
+			return 1;
 		}
 	}
   // string - object
@@ -242,8 +243,9 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
     }
     string validateCmd="validateCmdLine_deleteObject {" + cmdArgs + "}";
-    if(Tcl_Eval(interp,validateCmd.c_str())==TCL_ERROR) {
-      exit (1);
+    if(TCL_OK!=Tcl_Eval(interp,validateCmd.c_str())) {
+      cout << "[ERROR] Syntax error." << endl;
+			return 1; 
     }
   }
 	
@@ -290,15 +292,16 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
 
 	string cmdArgs;
   if (1!=objc & 3 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "object name");
+    Tcl_WrongNumArgs (interp, 1, objv, "[<string>] [-below <string[/string]>]");
     return TCL_ERROR;
   } else {
     if (3 == objc) {
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[1]) + " " + Tcl_GetString(objv[2]);
     }
     string validateCmd="validateCmdLine_displayObject {" + cmdArgs + "}";
-    if(Tcl_Eval(interp,validateCmd.c_str())==TCL_ERROR) {
-			exit (1);
+		if(TCL_OK!=Tcl_Eval(interp,validateCmd.c_str())) {
+      cout << "[ERROR] Syntax error." << endl;
+      return 1;
     }
   }
 
@@ -344,7 +347,7 @@ void C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CON
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
    
   if (root->child==NULL) { // Ugly 
-		cout << "[ERROR] Nothing to save" << endl;
+		cout << "[ERROR] Nothing to save." << endl;
 		return 1;
   }
   if (2 != objc) {
@@ -359,7 +362,7 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 		fh<<outputString;
 		fh.close();
 	} else {
-		cout << "[ERROR} File already exists" << endl;
+		cout << "[ERROR] File already exists." << endl;
 	}
 }
 

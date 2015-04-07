@@ -1,13 +1,13 @@
 
 proc checkNameSyntax {nameToCheck} {
   if {![regexp {^[A-Za-z]+$} $nameToCheck tmp parent]} {
-    puts "\[ERROR\] Syntax error '$nameToCheck'"
+    puts "\[ERROR\] Syntax error '$nameToCheck'."
   }
 }
 
 proc read_file {file_name} {
   if {![file exist $file_name]} {
-    puts "\[ERROR\]: File '$file_name' does not exist."
+    puts "\[ERROR\] File '$file_name' does not exist."
     exit 1
   }
 	# First remove everything from memory
@@ -30,7 +30,7 @@ proc read_file {file_name} {
       #puts "This is a first child $first_child"
 			regsub -nocase "\\-" $single_line_no_space "" child
 			if {![info exists parent]} {
-				puts "\[ERROR\] Wrong hierarchy"
+				puts "\[ERROR\] Wrong hierarchy."
 				delete_object
 				return 1
 			}
@@ -39,7 +39,7 @@ proc read_file {file_name} {
       #puts "This is a first child $second_child"
 			regsub -nocase "\\--" $single_line_no_space "" childChild 
 			if {![info exists child]} {
-        puts "\[ERROR\] Wrong hierarchy"
+        puts "\[ERROR\] Wrong hierarchy."
 				delete_object
 				return 1
 			}
@@ -56,7 +56,7 @@ proc read_file {file_name} {
 }
 proc validateCmdLine_addObject {component_name} {
 	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
-		puts "\[ERROR\]: Syntax error"
+		#puts "\[ERROR\]: Syntax error."
 	  return TCL_ERROR
 	} 
 	return TCL_OK
@@ -64,7 +64,7 @@ proc validateCmdLine_addObject {component_name} {
 
 proc validateCmdLine_deleteObject {component_name} {
   if {![regexp {^\s*([A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*)*\s*$} $component_name]} {
-    puts "\[ERROR\]: Syntax error"
+    puts "\[ERROR\]: Syntax error."
     return TCL_ERROR
   }
   return TCL_OK
@@ -72,7 +72,7 @@ proc validateCmdLine_deleteObject {component_name} {
 
 proc validateCmdLine_displayObject {component_name} {
 	if {![regexp {^\s*(-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
-		puts "\[ERROR\]: Syntax error"
+		puts "\[ERROR\]: Syntax error."
 		return TCL_ERROR
 	}
 	return TCL_OK
@@ -82,7 +82,7 @@ proc add_to_single_name {component_name} {
   if {$component_name ni $name_list(original)} {
     append name_list(original) "$component_name  "
   } else {
-    puts "\[ERROR\] Name already exists '$component_name'."
+    puts "\[ERROR\] Name '$component_name' already exists."
     return TCL_ERROR
   }
 }
