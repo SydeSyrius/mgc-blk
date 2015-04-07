@@ -181,8 +181,9 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 			cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
 		}
 		string validateCmd="validateCmdLine_addObject {" + cmdArgs + "}";
-		if(TCL_OK!=Tcl_Eval(interp,validateCmd.c_str())) {
-			cout << "[ERROR] Syntax error."<<endl;
+		Tcl_Eval(interp,validateCmd.c_str());
+		if(Tcl_GetStringResult(interp)) {
+			cout << "ddd" << endl;
 			return 1;
 		}
 	}
@@ -210,14 +211,14 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   } else {
 	tmp=root->findChild(parent);
 	if (tmp == NULL ) {
-		cout << "Wrong hierarchy" << endl;
+		cout << "[ERROR] Wrong hierarchy." << endl;
 	} else {
 		if (child=="") {
 			tmp->addChild(object, "-");
 		} else {
 			tmp = tmp->findChild(child);
 			if (tmp == NULL) {
-				   cout << "Wrong hierarchy" << endl;
+				   cout << "[ERROR] Wrong hierarchy." << endl;
 			} else {
 				tmp->addChild(object, "--");
 			}
@@ -243,9 +244,8 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
     }
     string validateCmd="validateCmdLine_deleteObject {" + cmdArgs + "}";
-    if(TCL_OK!=Tcl_Eval(interp,validateCmd.c_str())) {
-      cout << "[ERROR] Syntax error." << endl;
-			return 1; 
+		if(TCL_OK!=Tcl_GetStringResult(interp)) {
+      return 1;
     }
   }
 	
@@ -268,14 +268,14 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
   } else {
 		tmp=root->findChild(parent);
 		if (tmp == NULL ) {
-			cout << "Wrong hierarchy" << endl;
+			cout << "[ERROR] Wrong hierarchy." << endl;
 		} else {
 			if (child=="") {
 				tmp->removeChild(toRemove);
 			} else {
 				tmp = tmp->findChild(child);
 				if (tmp == NULL) {
-					cout << "Wrong hierarchy" << endl;
+					cout << "[ERROR] Wrong hierarchy." << endl;
 				} else {
 					tmp->removeChild(toRemove);
 				}
@@ -299,8 +299,8 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[1]) + " " + Tcl_GetString(objv[2]);
     }
     string validateCmd="validateCmdLine_displayObject {" + cmdArgs + "}";
-		if(TCL_OK!=Tcl_Eval(interp,validateCmd.c_str())) {
-      cout << "[ERROR] Syntax error." << endl;
+		Tcl_Eval(interp,validateCmd.c_str());
+		if(TCL_OK!=Tcl_GetStringResult(interp)) {
       return 1;
     }
   }
@@ -328,14 +328,14 @@ void C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CON
 	} else {
 		tmp=root->findChild(parent);
 		if (tmp == NULL ) {
-			cout << "Wrong hierarchy" << endl;
+			cout << "[ERROR] Wrong hierarchy." << endl;
 		} else {
 			if (child=="") {
 				tmp->printName(outputString);
 			} else {
 				tmp = tmp->findChild(child);
 				if (tmp == NULL) {
-					cout << "Wrong hierarchy" << endl;
+					cout << "[ERROR] Wrong hierarchy." << endl;
 				} else {
 					tmp->printName(outputString);
 					}

@@ -56,9 +56,9 @@ proc read_file {file_name} {
 }
 proc validateCmdLine_addObject {component_name} {
 	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+)*)*\s*$} $component_name]} {
-		#puts "\[ERROR\]: Syntax error."
+		puts "\[ERROR\]: Syntax error."
 	  return TCL_ERROR
-	} 
+	}
 	return TCL_OK
 }
 
