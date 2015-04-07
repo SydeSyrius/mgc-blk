@@ -17,6 +17,7 @@ class C_Tcl_interface {
     public:
     Tcl_Interp *interp;
     Object *root;
+    string TCL_return;
 
     int argss_n; 
     cmdLineMessage message;
@@ -36,10 +37,11 @@ class C_Tcl_interface {
     int readInputDoFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-		void printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child); 
+    void printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child); 
     int displayStructure(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int writeFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int memoryUsage(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+    string run_Tcl_Eval(Tcl_Interp *interp, string command);
 };
 
 
@@ -50,8 +52,14 @@ C_Tcl_interface :: C_Tcl_interface () {
     fprintf (stderr, "Tcl_Init error: %s\n", Tcl_GetStringResult (interp));
     exit (EXIT_FAILURE);
   }
-  
+  TCL_return="";
   root = new Object();
+}
+
+string C_Tcl_interface::run_Tcl_Eval(Tcl_Interp *interp, string command) {
+  Tcl_Eval(interp,command.c_str());
+  TCL_return = Tcl_GetStringResult(interp);
+  return TCL_return;
 }
 
 void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
