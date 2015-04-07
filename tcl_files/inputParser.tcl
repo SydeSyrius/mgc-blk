@@ -79,7 +79,7 @@ proc validateCmdLine_displayObject {component_name} {
 proc add_to_single_name {component_name} {
   global name_list
   if {$component_name ni $name_list(original)} {
-    append name_list(original) "$component_name  "
+		append name_list(original) "$component_name  "
   } else {
     puts "\[ERROR\] Name '$component_name' already exists."
     return TCL_ERROR

@@ -37,7 +37,7 @@ class C_Tcl_interface {
     int readInputDoFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int addToClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int removeFromClist (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-    void printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child); 
+    int printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child); 
     int displayStructure(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int writeFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
     int memoryUsage(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
@@ -218,6 +218,7 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 	tmp=root->findChild(parent);
 	if (tmp == NULL ) {
 		cout << "[ERROR] Wrong hierarchy." << endl;
+		return 1;
 	} else {
 		if (child=="") {
 			tmp->addChild(object, "-");
@@ -225,6 +226,7 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 			tmp = tmp->findChild(child);
 			if (tmp == NULL) {
 				   cout << "[ERROR] Wrong hierarchy." << endl;
+					 return 1;
 			} else {
 				tmp->addChild(object, "--");
 			}
@@ -275,6 +277,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 		tmp=root->findChild(parent);
 		if (tmp == NULL ) {
 			cout << "[ERROR] Wrong hierarchy." << endl;
+			return 1;
 		} else {
 			if (child=="") {
 				tmp->removeChild(toRemove);
@@ -282,6 +285,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 				tmp = tmp->findChild(child);
 				if (tmp == NULL) {
 					cout << "[ERROR] Wrong hierarchy." << endl;
+					return 1;
 				} else {
 					tmp->removeChild(toRemove);
 				}
@@ -308,7 +312,6 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
 		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
       return 1;
     }
-
   }
 
 	// good place to insert bug :D
@@ -322,12 +325,14 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
   }
 
 	string outputString="";
-	printStructure(interp, objc, objv, outputString,parent,child);
+	if (printStructure(interp, objc, objv, outputString,parent,child)) {
+		return 1;
+	} 
 	cout<<outputString;
-  return TCL_OK; 
+	return 0; 
 }
 
-void C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child){
+int C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child){
 	Object* tmp;
 	if (parent=="") {
 		root->printName(outputString);
@@ -335,6 +340,7 @@ void C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CON
 		tmp=root->findChild(parent);
 		if (tmp == NULL ) {
 			cout << "[ERROR] Wrong hierarchy." << endl;
+			return 1;
 		} else {
 			if (child=="") {
 				tmp->printName(outputString);
@@ -342,6 +348,7 @@ void C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CON
 				tmp = tmp->findChild(child);
 				if (tmp == NULL) {
 					cout << "[ERROR] Wrong hierarchy." << endl;
+					return 1;
 				} else {
 					tmp->printName(outputString);
 					}
@@ -360,16 +367,15 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
           Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
           return TCL_ERROR;
   }
-	
-	if (Tcl_Eval(interp, Tcl_GetString(objv[1]))) {
+	//if("TCL_OK" == run_Tcl_Eval(interp,Tcl_GetString(objv[1]))) {
 		string outputString="";
   	ofstream fh(Tcl_GetString(objv[1]));
     printStructure(interp, objc, objv, outputString, "", "");
 		fh<<outputString;
 		fh.close();
-	} else {
-		cout << "[ERROR] File already exists." << endl;
-	}
+	//} else {
+	//	cout << "[ERROR] File already exists." << endl;
+	//}
 }
 
 int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
