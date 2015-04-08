@@ -144,7 +144,7 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   if (2 != objc) {
-	  Tcl_WrongNumArgs (interp, 1, objv, "<string>");
+	  cout << "[ERROR] Syntax error." << endl
 	  return TCL_ERROR;
   }
 
@@ -156,9 +156,6 @@ int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 }
   
 void  C_Tcl_interface::getHierarchyTable (string option, string hierarchy, string hierarchyTable[]) {
-  if (option!="-below")  {
-    return;
-  }
   int startString = 0;
   int index = 0;
   size_t findIndex =hierarchy.find("/");
@@ -181,7 +178,7 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 
    // add_object <string> [-below <string>]
   if ((2 != objc) & (4 != objc)) {
-    Tcl_WrongNumArgs (interp, 1, objv, "<string> [ -below <string> ]");
+    cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   } else {
 		cmdArgs=Tcl_GetString (objv[1]);
@@ -241,7 +238,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
   string object="";
 	string cmdArgs;
 	if ((1!= objc) & (2 != objc) & (4 != objc)) {
-    Tcl_WrongNumArgs (interp, 1, objv, "[<string>] [ -below <string> ]");
+    cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   } else {
     if (objc > 1) {
@@ -302,7 +299,7 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
 
 	string cmdArgs;
   if (1!=objc & 3 != objc) {
-    Tcl_WrongNumArgs (interp, 1, objv, "[<string>] [-below <string[/string]>]");
+    cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   } else {
     if (3 == objc) {
@@ -364,8 +361,8 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 		return 1;
   }
   if (2 != objc) {
-          Tcl_WrongNumArgs (interp, 1, objv, "<file_name>");
-          return TCL_ERROR;
+  	cout << "[ERROR] Syntax error." << endl
+    return TCL_ERROR;
   }
 	//if("TCL_OK" == run_Tcl_Eval(interp,Tcl_GetString(objv[1]))) {
 		string outputString="";
@@ -381,8 +378,7 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
    if (1 < objc) {
-     // do poprawy
-    //Tcl_WrongArgs (interp, 1, objv, "Ta opcja nie przyjmuje zadnych argumentow.");
+		cout << "[ERROR] Syntax error." << endl
     return TCL_ERROR;
   }
   cout << "[Info] Memory usage is " << getValue() << endl;
