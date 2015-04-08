@@ -1,15 +1,29 @@
-
+global name_list
 proc checkNameSyntax {nameToCheck} {
   if {![regexp {^[A-Za-z]+$} $nameToCheck tmp parent]} {
     puts "\[ERROR\] Syntax error '$nameToCheck'."
   }
 }
-
-proc read_file {file_name} {
-  if {![file exist $file_name]} {
+proc sourceFile {file_name} {
+	if { "TCL_OK" != [checkFile $file_name] } {
+		return TCL_ERROR
+	}
+	puts "Executing file: $file_name"
+	source $file_name
+	return TCL_OK
+}
+proc checkFile {file_name} {
+ if {![file exist $file_name]} {
     puts "\[ERROR\] File '$file_name' does not exist."
     return TCL_ERROR
   }
+	return TCL_OK	
+}
+
+proc read_file {file_name} {
+	if { "TCL_OK" != [checkFile $file_name] } {
+		return TCL_ERROR
+	}
 	# First remove everything from memory
 	delete_object
   global name_list

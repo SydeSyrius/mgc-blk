@@ -147,11 +147,12 @@ int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 	  cout << "[ERROR] Syntax error." << endl;
 	  return TCL_ERROR;
   }
-
-  cout<<"Executing: "<<  Tcl_GetString(objv[1]) << endl ;
-  if (TCL_OK != Tcl_EvalFile(interp,Tcl_GetString(objv[1]))) {
-	  return TCL_ERROR;
+	string cmdArg=Tcl_GetString(objv[1]);
+	string invokeArg="sourceFile " + cmdArg;
+	if("TCL_OK" != run_Tcl_Eval(interp, invokeArg.c_str())) {
+      return 1;
   }
+	
   return 0;
 }
   
