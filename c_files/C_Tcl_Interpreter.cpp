@@ -118,7 +118,7 @@ void C_Tcl_interface::InitializeCommands() {
 
 int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
     // This is a command parser
-    // objc                    -> number of arguments    
+    // objc                    -> number of arguments
     // objv[0]                 -> command name
     // objv[1] to objv[objc-1] -> arguments
     string commandName = Tcl_GetString(objv[0]);
@@ -126,13 +126,13 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
     if (commandName=="add_object") {
       return addToClist(interp, objc, objv) ;
     } else if (commandName=="delete_object") {
-        return removeFromClist(interp, objc, objv) ;
+      return removeFromClist(interp, objc, objv) ;
     } else if (commandName=="display_object") {
       return displayStructure(interp, objc, objv) ;
     } else if (commandName=="write_file") {
       return writeFile(interp, objc, objv) ;
     } else if (commandName=="execute_script") {
-       return readInputDoFile(interp, objc, objv) ;
+      return readInputDoFile(interp, objc, objv) ;
     } else if (commandName=="memory_usage")  {
       return memoryUsage(interp, objc, objv) ;
     }

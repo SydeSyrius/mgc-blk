@@ -462,8 +462,6 @@
       } elseif {$env(HISTORY_LEVEL) > $hlen} {
           set env(HISTORY_LEVEL) $hleno match found.
 
-+tcl + +tcltcl 
-
       }
   }
   
@@ -646,8 +644,10 @@
                       
                       # Run the command:
                       catch $cmdline res
+                      
                       if {$res != ""} {
-                          print "$res\n"
+                      # silent TCL output
+                      #    print "$res\n"
                       }
                       
                       # Append HISTORY:
