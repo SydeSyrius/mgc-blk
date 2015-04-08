@@ -12,6 +12,14 @@ proc sourceFile {file_name} {
 	source $file_name
 	return TCL_OK
 }
+proc writeFileCheck {file_name} {
+	if {![file exist $file_name]} {
+    return TCL_OK
+  }
+	puts "\[ERROR\] File '$file_name' already exists.'"
+  return TCL_ERROR
+}
+
 proc checkFile {file_name} {
  if {![file exist $file_name]} {
     puts "\[ERROR\] File '$file_name' does not exist."

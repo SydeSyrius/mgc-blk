@@ -365,15 +365,15 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   	cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   }
-	//if("TCL_OK" == run_Tcl_Eval(interp,Tcl_GetString(objv[1]))) {
+	string cmdArg=Tcl_GetString(objv[1]);
+	string validateFile="writeFileCheck " + cmdArg;
+	if("TCL_OK" == run_Tcl_Eval(interp,validateFile.c_str())) {
 		string outputString="";
   	ofstream fh(Tcl_GetString(objv[1]));
     printStructure(interp, objc, objv, outputString, "", "");
 		fh<<outputString;
 		fh.close();
-	//} else {
-	//	cout << "[ERROR] File already exists." << endl;
-	//}
+	}
 }
 
 int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
