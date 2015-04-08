@@ -96,7 +96,7 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   }
   // Run tcl console
   if (TCL_OK != Tcl_Eval (interp, cmd.c_str())) {
-    cout<<"[ERROR] "<<Tcl_GetStringResult (interp)<<endl;
+    cout<<"[ERROR] Unexpected error from interpreter. Intercepted error "<<Tcl_GetStringResult (interp) << "." <<endl;
     exit (1);
   }
   return 0;
@@ -144,7 +144,7 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   if (2 != objc) {
-	  cout << "[ERROR] Syntax error." << endl
+	  cout << "[ERROR] Syntax error." << endl;
 	  return TCL_ERROR;
   }
 
@@ -361,7 +361,7 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 		return 1;
   }
   if (2 != objc) {
-  	cout << "[ERROR] Syntax error." << endl
+  	cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   }
 	//if("TCL_OK" == run_Tcl_Eval(interp,Tcl_GetString(objv[1]))) {
@@ -378,7 +378,7 @@ int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
    if (1 < objc) {
-		cout << "[ERROR] Syntax error." << endl
+		cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   }
   cout << "[Info] Memory usage is " << getValue() << endl;

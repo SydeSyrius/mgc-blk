@@ -8,7 +8,7 @@ proc checkNameSyntax {nameToCheck} {
 proc read_file {file_name} {
   if {![file exist $file_name]} {
     puts "\[ERROR\] File '$file_name' does not exist."
-    exit 1
+    return TCL_ERROR
   }
 	# First remove everything from memory
 	delete_object
@@ -32,7 +32,7 @@ proc read_file {file_name} {
 			if {![info exists parent]} {
 				puts "\[ERROR\] Wrong hierarchy."
 				delete_object
-				return 1
+				return TCL_ERROR
 			}
       add_object $child -below $parent
     } elseif {[regexp {^--[A-Za-z]+$} $single_line_no_space tmp second_child]} {
@@ -41,17 +41,18 @@ proc read_file {file_name} {
 			if {![info exists child]} {
         puts "\[ERROR\] Wrong hierarchy."
 				delete_object
-				return 1
+				return TCL_ERROR
 			}
       puts "add_object $childChild -below $parent/$child"
     } elseif {[regexp {^$} $single_line_no_space]} {
       #puts "Can be ignored" - empty line
     } else {
       puts "\[ERROR\] Syntax error in line '$single_line'."
-      return 1
+      return TCL_ERROR
       #puts "This is a syntax error"
     }
   }
+	return TCL_OK
 }
 proc validateCmdLine_addObject {component_name} {
 	if {![regexp {^\s*[A-Za-z]+\s*(\s+-below\s+[A-Za-z]+(/[A-Za-z]+){0,1})*\s*$} $component_name]} {
@@ -92,10 +93,12 @@ proc removeFromSingle {component_name} {
 	  set index [lsearch -exact $name_list(original) $removeInstance]
   		if { $index == -1 } {
 				puts "\[ERROR\] Object does not exist."
+				return TCL_ERROR
   		} else {
     		set name_list(original) [lreplace $name_list(original) $index $index]
   		}
 	}
+	return TCL_OK
 }
 
 proc changeLetter {letter new_letter} {
