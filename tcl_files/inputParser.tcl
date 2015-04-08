@@ -57,7 +57,7 @@ proc read_file {file_name} {
 				delete_object
 				return TCL_ERROR
 			}
-      puts "add_object $childChild -below $parent/$child"
+      add_object $childChild -below $parent/$child
     } elseif {[regexp {^$} $single_line_no_space]} {
       #puts "Can be ignored" - empty line
     } else {
