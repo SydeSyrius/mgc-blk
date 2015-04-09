@@ -11,7 +11,7 @@
   
   # Initialise our own env variables:
   foreach {var val} {
-      PROMPT "KriBaL> "
+      PROMPT "TestingDojo> "
       HISTORY ""
       HISTORY_BUFFER 100
       COMPLETION_MATCH ""
@@ -645,9 +645,8 @@
                       # Run the command:
                       catch $cmdline res
                       
-                      if {$res != ""} {
-                      # silent TCL output
-                      #    print "$res\n"
+                      if {$res!="" && !($res=="TCL_OK" || $res=="TCL_ERROR")} {
+                          print "$res\n"
                       }
                       
                       # Append HISTORY:
