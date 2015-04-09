@@ -266,7 +266,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
     child  = hierarchyTable[1];
   } 
  
-	string toRemove;
+	string toRemove="";
   Object *tmp;
   // Remove parent (no below)
   if (object=="") {
@@ -287,7 +287,7 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 			}
 		} else {
 				tmp = tmp->findChild(child); // I got child
-				tmp= tmp ->findChild(object); // Now get object
+				tmp= tmp->findChild(object); // Now get object
 		}
 		if (tmp == NULL) {
 				cout << "[ERROR] Wrong hierarchy." << endl;
@@ -296,7 +296,6 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 				tmp->removeMe(toRemove);
 		}
 	}
-	cout << "I want this " << toRemove << endl;
   string invokeProc="removeFromSingle {" + toRemove + "}";
   Tcl_Eval(interp, invokeProc.c_str());
   

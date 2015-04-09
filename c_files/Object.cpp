@@ -42,17 +42,19 @@ void Object::addChild(const string& name, const string& level){
 void Object::removeMe(string& toRemove) {
 	if (this->child!=NULL) {
 		this->removeChild(toRemove);
-		this->child=NULL; // all child removed
+//		this->child=NULL; // all child removed
 	} else {
 		toRemove+=this->myName;
 	}
 	if (this->previous==NULL) {
 		this->parent->child=this->next;
+		this->next->previous=NULL;
 	} else {
 		if(this->next==NULL) {
 			this->previous->next=NULL;
 		} else {
 			this->previous->next=this->next;
+			this->next->previous=this->previous;
 		}
 	}
 	delete this;
