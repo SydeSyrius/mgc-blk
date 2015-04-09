@@ -10,10 +10,11 @@ Object::Object() {
 
 }
 
-Object::Object(const string& name, const string& level, Object* pointer) {
+Object::Object(const string& name, const string& level, Object* pointer, Object* pointerParent) {
 	myName	=name;
 	myLevel   =level;
 
+	parent=pointerParent;
 	next	=NULL;
 	previous=pointer;
 	child	=NULL;
@@ -28,14 +29,33 @@ Object* Object::findChild(const string& name){
 
 void Object::addChild(const string& name, const string& level){
 	if (child==NULL) {
-		child = new Object(name, level, 0);
+		child = new Object(name, level, 0, this);
 	} else {
 		Object* tmp = child;
 		while (tmp->next!=NULL) {
 			tmp = tmp->next;
 		}
-		tmp->next = new Object(name, level, tmp);
+		tmp->next = new Object(name, level, tmp, this);
 	}
+}
+
+void Object::removeMe(string& toRemove) {
+	if (this->child!=NULL) {
+		this->removeChild(toRemove);
+		this->child=NULL; // all child removed
+	} else {
+		toRemove+=this->myName;
+	}
+	if (this->previous==NULL) {
+		this->parent->child=this->next;
+	} else {
+		if(this->next==NULL) {
+			this->previous->next=NULL;
+		} else {
+			this->previous->next=this->next;
+		}
+	}
+	delete this;
 }
 
 void Object::removeChild(string& toRemove){

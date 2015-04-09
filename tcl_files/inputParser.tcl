@@ -1,9 +1,3 @@
-global name_list
-proc checkNameSyntax {nameToCheck} {
-  if {![regexp {^[A-Za-z]+$} $nameToCheck tmp parent]} {
-    puts "\[ERROR\] Syntax error '$nameToCheck'."
-  }
-}
 proc sourceFile {file_name} {
 	if { "TCL_OK" != [checkFile $file_name] } {
 		return TCL_ERROR

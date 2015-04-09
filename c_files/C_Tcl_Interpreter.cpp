@@ -211,18 +211,18 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   Object *tmp;
   // Adding parent (no below)
   if (parent=="") {
- 	root->addChild(object,"");
+	 	root->addChild(object,"");
   } else {
-	tmp=root->findChild(parent);
-	if (tmp == NULL ) {
-		cout << "[ERROR] Wrong hierarchy." << endl;
-		return 1;
-	} else {
-		if (child=="") {
-			tmp->addChild(object, "-");
+		tmp=root->findChild(parent);
+		if (tmp == NULL ) {
+			cout << "[ERROR] Wrong hierarchy." << endl;
+			return 1;
 		} else {
-			tmp = tmp->findChild(child);
-			if (tmp == NULL) {
+			if (child=="") {
+				tmp->addChild(object, "-");
+			} else {
+				tmp = tmp->findChild(child);
+				if (tmp == NULL) {
 				   cout << "[ERROR] Wrong hierarchy." << endl;
 					 return 1;
 			} else {
@@ -268,28 +268,35 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
  
 	string toRemove;
   Object *tmp;
-  // Adding parent (no below)
-  if (parent=="") {
-		root->removeChild(toRemove);
+  // Remove parent (no below)
+  if (object=="") {
+		root->removeChild(toRemove); // Remove ALL
   } else {
-		tmp=root->findChild(parent);
+		if (parent=="") {
+			tmp=root->findChild(object); // del just TOP level parent
+		} else {	
+			tmp=root->findChild(parent); // I want to remove something else - lower level
+		}
 		if (tmp == NULL ) {
-			cout << "[ERROR] Wrong hierarchy." << endl;
+			cout << "[ERROR] Wrong hierarchy" << endl; // there is no parrent
 			return 1;
-		} else {
-			if (child=="") {
-				tmp->removeChild(toRemove);
-			} else {
-				tmp = tmp->findChild(child);
-				if (tmp == NULL) {
-					cout << "[ERROR] Wrong hierarchy." << endl;
-					return 1;
-				} else {
-					tmp->removeChild(toRemove);
-				}
+			} 
+		if (child=="") { // on parent
+			if (parent!="") {
+				tmp=tmp->findChild(object);
 			}
+		} else {
+				tmp = tmp->findChild(child); // I got child
+				tmp= tmp ->findChild(object); // Now get object
+		}
+		if (tmp == NULL) {
+				cout << "[ERROR] Wrong hierarchy." << endl;
+				return 1;
+		} else {
+				tmp->removeMe(toRemove);
 		}
 	}
+	cout << "I want this " << toRemove << endl;
   string invokeProc="removeFromSingle {" + toRemove + "}";
   Tcl_Eval(interp, invokeProc.c_str());
   
