@@ -280,14 +280,13 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 		if (tmp == NULL ) {
 			cout << "[ERROR] Wrong hierarchy" << endl; // there is no parrent
 			return 1;
-			} 
+		} 
 		if (child=="") { // on parent
 			if (parent!="") {
 				tmp=tmp->findChild(object);
 			}
 		} else {
 				tmp = tmp->findChild(child); // I got child
-				tmp= tmp->findChild(object); // Now get object
 		}
 		if (tmp == NULL) {
 				cout << "[ERROR] Wrong hierarchy." << endl;

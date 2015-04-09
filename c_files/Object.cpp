@@ -47,8 +47,12 @@ void Object::removeMe(string& toRemove) {
 		toRemove+=this->myName;
 	}
 	if (this->previous==NULL) {
-		this->parent->child=this->next;
-		this->next->previous=NULL;
+		if (this->next!=NULL) {
+			this->parent->child=this->next;
+			this->next->previous=NULL;
+		} else {
+			this->parent->child=NULL;
+		}
 	} else {
 		if(this->next==NULL) {
 			this->previous->next=NULL;
