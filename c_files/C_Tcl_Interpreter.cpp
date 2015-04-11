@@ -358,6 +358,7 @@ int C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 				}
 			}
 		}
+return 0;
 }
 
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
