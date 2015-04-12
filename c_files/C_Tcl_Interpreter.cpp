@@ -196,7 +196,9 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 
   // Add to tcl list first
   string invokeProc="add_to_single_name " + object; 
-  Tcl_Eval(interp, invokeProc.c_str());
+  if("TCL_OK" != run_Tcl_Eval(interp, invokeProc.c_str())){
+		return 1;
+	}
   // good place to insert bug :D
   string hierarchyTable[10]="";
 
@@ -216,6 +218,8 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 		tmp=root->findChild(parent);
 		if (tmp == NULL ) {
 			cout << "[ERROR] Wrong hierarchy." << endl;
+			string invokeProc="removeFromSingle {" + object + "}";
+			Tcl_Eval(interp, invokeProc.c_str());	
 			return 1;
 		} else {
 			if (child=="") {
@@ -224,6 +228,8 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 				tmp = tmp->findChild(child);
 				if (tmp == NULL) {
 				   cout << "[ERROR] Wrong hierarchy." << endl;
+					string invokeProc="removeFromSingle {" + object + "}";
+				  Tcl_Eval(interp, invokeProc.c_str());
 					 return 1;
 			} else {
 				tmp->addChild(object, "--");
