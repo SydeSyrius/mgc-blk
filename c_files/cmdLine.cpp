@@ -19,7 +19,7 @@ void cmdLineMessage::printHelp() {
 void cmdLineMessage::printBanner() {
 	cout << endl;
 	cout << "#### " << toolName << " 0.1 ####" << endl;
-	cout << "####################" << endl;
+	cout << "#########################" << endl;
 	cout << endl;
 }
 
