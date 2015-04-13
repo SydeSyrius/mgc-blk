@@ -1,0 +1,21 @@
+Enviromental variables to inject bugs into KriBaL
+
+
+1. regexp na display z /////
+   env_td_display
+DONE, checked
+
+2. dopisuje do pliku zamiast printowac ze juz istnieje
+   env_td_out_file_append
+DONE, checked
+
+3. zepsuc -- na --- jak czyta z pliku
+   env_td_wrong_hierarchy
+DONE, checked
+
+4. brakujący error msg
+   env_td_missing_error_msg
+
+5. wlaczenie tego printowania wewnetrznych danych -> name_list(original)
+   env_td_print_internal_data
+DONE, checked
