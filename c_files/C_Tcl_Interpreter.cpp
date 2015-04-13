@@ -83,10 +83,10 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   } else if (argv[1] == std::string("-execute_script")) {
     if (argv[2] != NULL) {
       if (argc>3){
-				message.printError();
+        message.printError();
       } else {
-				message.printBanner();
-				cmd = "source tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
+        message.printBanner();
+        cmd = "source tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
       }
     } else {
       message.printError();
@@ -144,15 +144,14 @@ int C_Tcl_interface::LinkCommand (Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   if (2 != objc) {
-	  cout << "[ERROR] Syntax error." << endl;
-	  return TCL_ERROR;
+    cout << "[ERROR] Syntax error." << endl;
+    return TCL_ERROR;
   }
-	string cmdArg=Tcl_GetString(objv[1]);
-	string invokeArg="sourceFile " + cmdArg;
-	if("TCL_OK" != run_Tcl_Eval(interp, invokeArg.c_str())) {
+  string cmdArg=Tcl_GetString(objv[1]);
+  string invokeArg="sourceFile " + cmdArg;
+  if("TCL_OK" != run_Tcl_Eval(interp, invokeArg.c_str())) {
       return 1;
   }
-	
   return 0;
 }
   
@@ -182,23 +181,23 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
     cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   } else {
-		cmdArgs=Tcl_GetString (objv[1]);
-		if (4 == objc) {
-			cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
-		}
-		string validateCmd="validateCmdLine_addObject {" + cmdArgs + "}";
-		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
-			return 1;
-		}
-	}
+    cmdArgs=Tcl_GetString (objv[1]);
+    if (4 == objc) {
+      cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
+    }
+    string validateCmd="validateCmdLine_addObject {" + cmdArgs + "}";
+    if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
+      return 1;
+    }
+  }
   // string - object
   object = Tcl_GetString (objv[1]);
 
   // Add to tcl list first
   string invokeProc="add_to_single_name " + object; 
   if("TCL_OK" != run_Tcl_Eval(interp, invokeProc.c_str())){
-		return 1;
-	}
+    return 1;
+  }
   // good place to insert bug :D
   string hierarchyTable[10]="";
 
@@ -213,29 +212,29 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
   Object *tmp;
   // Adding parent (no below)
   if (parent=="") {
-	 	root->addChild(object,"");
+    root->addChild(object,"");
   } else {
-		tmp=root->findChild(parent);
-		if (tmp == NULL ) {
-			cout << "[ERROR] Wrong hierarchy." << endl;
-			string invokeProc="removeFromSingle {" + object + "}";
-			Tcl_Eval(interp, invokeProc.c_str());	
-			return 1;
-		} else {
-			if (child=="") {
-				tmp->addChild(object, "-");
-			} else {
-				tmp = tmp->findChild(child);
-				if (tmp == NULL) {
-				   cout << "[ERROR] Wrong hierarchy." << endl;
-					string invokeProc="removeFromSingle {" + object + "}";
-				  Tcl_Eval(interp, invokeProc.c_str());
-					 return 1;
-			} else {
-				tmp->addChild(object, "--");
-			}
-		}
-	}
+    tmp=root->findChild(parent);
+    if (tmp == NULL ) {
+      cout << "[ERROR] Wrong hierarchy." << endl;
+      string invokeProc="removeFromSingle {" + object + "}";
+      Tcl_Eval(interp, invokeProc.c_str());	
+      return 1;
+    } else {
+      if (child=="") {
+        tmp->addChild(object, "-");
+      } else {
+        tmp = tmp->findChild(child);
+        if (tmp == NULL) {
+          cout << "[ERROR] Wrong hierarchy." << endl;
+          string invokeProc="removeFromSingle {" + object + "}";
+          Tcl_Eval(interp, invokeProc.c_str());
+          return 1;
+        } else {
+          tmp->addChild(object, "--");
+        }
+      }
+    }
   }
   return TCL_OK;
 }
@@ -243,25 +242,24 @@ int C_Tcl_interface::addToClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
   string object="";
-	string cmdArgs;
-	if ((1!= objc) & (2 != objc) & (4 != objc)) {
+  string cmdArgs;
+  if ((1!= objc) & (2 != objc) & (4 != objc)) {
     cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   } else {
     if (objc > 1) {
-			cmdArgs=Tcl_GetString (objv[1]);
-			object = Tcl_GetString (objv[1]);
-		}
+      cmdArgs=Tcl_GetString (objv[1]);
+      object = Tcl_GetString (objv[1]);
+    }
     if (4 == objc) {
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[2]) + " " + Tcl_GetString(objv[3]);
     }
     string validateCmd="validateCmdLine_deleteObject {" + cmdArgs + "}";
-		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
+    if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
       return 1;
     }
   }
-	
-	// good place to insert bug :D
+// good place to insert bug :D
   string hierarchyTable[10]="";
 
   string parent = "";
@@ -272,44 +270,43 @@ int C_Tcl_interface::removeFromClist(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
     child  = hierarchyTable[1];
   } 
  
-	string toRemove="";
+  string toRemove="";
   Object *tmp;
   // Remove parent (no below)
   if (object=="") {
-		root->removeChild(toRemove); // Remove ALL
+    root->removeChild(toRemove); // Remove ALL
   } else {
-		if (parent=="") {
-			tmp=root->findChild(object); // del just TOP level parent
-		} else {	
-			tmp=root->findChild(parent); // I want to remove something else - lower level
-		}
-		if (tmp == NULL ) {
-			cout << "[ERROR] Wrong hierarchy" << endl; // there is no parrent
-			return 1;
-		} 
-		if (child=="") { // on parent
-			if (parent!="") {
-				tmp=tmp->findChild(object);
-			}
-		} else {
-				tmp = tmp->findChild(child); // I got child
-		}
-		if (tmp == NULL) {
-				cout << "[ERROR] Wrong hierarchy." << endl;
-				return 1;
-		} else {
-				tmp->removeMe(toRemove);
-		}
-	}
+    if (parent=="") {
+      tmp=root->findChild(object); // del just TOP level parent
+    } else {	
+      tmp=root->findChild(parent); // I want to remove something else - lower level
+    }
+    if (tmp == NULL ) {
+      cout << "[ERROR] Wrong hierarchy" << endl; // there is no parrent
+      return 1;
+    } 
+    if (child=="") { // on parent
+      if (parent!="") {
+        tmp=tmp->findChild(object);
+      }
+    } else {
+      tmp = tmp->findChild(child); // I got child
+    }
+    if (tmp == NULL) {
+      cout << "[ERROR] Wrong hierarchy." << endl;
+      return 1;
+    } else {
+      tmp->removeMe(toRemove);
+    }
+  }
   string invokeProc="removeFromSingle {" + toRemove + "}";
   Tcl_Eval(interp, invokeProc.c_str());
-  
-	return TCL_OK;
+  return TCL_OK;
 }
 
 int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
 
-	string cmdArgs;
+  string cmdArgs;
   if (1!=objc & 3 != objc) {
     cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
@@ -318,12 +315,12 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
       cmdArgs=cmdArgs + " " + Tcl_GetString(objv[1]) + " " + Tcl_GetString(objv[2]);
     }
     string validateCmd="validateCmdLine_displayObject {" + cmdArgs + "}";
-		if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
+    if("TCL_OK" != run_Tcl_Eval(interp, validateCmd.c_str())) {
       return 1;
     }
   }
 
-	// good place to insert bug :D
+// good place to insert bug :D
   string hierarchyTable[10]="";
   string parent = "";
   string child  = "";
@@ -333,59 +330,61 @@ int C_Tcl_interface::displayStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CO
     child  = hierarchyTable[1];
   }
 
-	string outputString="";
-	if (printStructure(interp, objc, objv, outputString,parent,child)) {
-		return 1;
-	} 
-	cout<<outputString;
-	return 0; 
+  string outputString="";
+  if (printStructure(interp, objc, objv, outputString,parent,child)) {
+    return 1;
+  } 
+  cout<<outputString;
+  return 0; 
 }
 
 int C_Tcl_interface::printStructure (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], string& outputString, const string& parent, const string& child){
-	Object* tmp;
-	if (parent=="") {
-		root->printName(outputString);
-	} else {
-		tmp=root->findChild(parent);
-		if (tmp == NULL ) {
-			cout << "[ERROR] Wrong hierarchy." << endl;
-			return 1;
-		} else {
-			if (child=="") {
-				tmp->printName(outputString);
-			} else {
-				tmp = tmp->findChild(child);
-				if (tmp == NULL) {
-					cout << "[ERROR] Wrong hierarchy." << endl;
-					return 1;
-				} else {
-					tmp->printName(outputString);
-					}
-				}
-			}
-		}
-return 0;
+  Object* tmp;
+  if (parent=="") {
+    root->printName(outputString);
+  } else {
+    tmp=root->findChild(parent);
+    if (tmp == NULL ) {
+      cout << "[ERROR] Wrong hierarchy." << endl;
+      return 1;
+    } else {
+      if (child=="") {
+        tmp->printName(outputString);
+      } else {
+        tmp = tmp->findChild(child);
+        if (tmp == NULL) {
+          cout << "[ERROR] Wrong hierarchy." << endl;
+          return 1;
+        } else {
+          tmp->printName(outputString);
+        }
+      }
+    }
+  }
+  return 0;
 }
 
 int C_Tcl_interface::writeFile (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
    
   if (root->child==NULL) { // Ugly 
-		cout << "[ERROR] Nothing to save." << endl;
-		return 1;
+    cout << "[ERROR] Nothing to save." << endl;
+    return 1;
   }
   if (2 != objc) {
-  	cout << "[ERROR] Syntax error." << endl;
+    cout << "[ERROR] Syntax error." << endl;
     return TCL_ERROR;
   }
-	string cmdArg=Tcl_GetString(objv[1]);
-	string validateFile="writeFileCheck " + cmdArg;
-	if("TCL_OK" == run_Tcl_Eval(interp,validateFile.c_str())) {
-		string outputString="";
-  	ofstream fh(Tcl_GetString(objv[1]));
+  string cmdArg=Tcl_GetString(objv[1]);
+  string validateFile="writeFileCheck " + cmdArg;
+  if("TCL_OK" == run_Tcl_Eval(interp,validateFile.c_str())) {
+    string outputString="";
+    ofstream fh;
+//    (Tcl_GetString(objv[1]));
+    fh.open(Tcl_GetString(objv[1]), std::ofstream::out | std::ofstream::app);
     printStructure(interp, objc, objv, outputString, "", "");
-		fh<<outputString;
-		fh.close();
-	}
+    fh<<outputString;
+    fh.close();
+  }
 }
 
 int C_Tcl_interface::memoryUsage (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {

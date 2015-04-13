@@ -1,5 +1,5 @@
 # compile with -g for gdb
 #g++ c_files/interp.cpp c_files/memory.cpp c_files/Object.cpp c_files/cmdLine.cpp c_files/C_Tcl_Interpreter.cpp -l tcl -std=c++11 -o ~/Desktop/run_project 
 g++ c_files/interp.cpp -l tcl -std=c++11 -o ~/Desktop/run_project 
-cp tcl_files ~/Desktop/. -rf
-cp   c_files/Tcl_int.tcl  ~/Desktop/. -rf
+cp  tcl_files ~/Desktop/. -rf
+cp  c_files/Tcl_int.tcl  ~/Desktop/. -rf
