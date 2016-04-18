@@ -1,0 +1,12 @@
+ # Compile
+g++ -fprofile-arcs -ftest-coverage c_files/interp.cpp -l tcl8.5 -std=c++11 -o ~/Pulpit/run_project 
+
+# Run with new build
+ ~/Pulpit/run_project -execute_script <path>
+
+# Collect data
+ gcov interp.cpp
+
+# Use lcov for HTML
+lcov --capture --directory <dir> --output-file coverage.info
+genhtml coverage.info --output-directory out
