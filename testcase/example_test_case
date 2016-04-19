@@ -1,0 +1,12 @@
+add_object a1
+add_object a2
+add_object d1 -below a1
+add_object d2 -below a1
+add_object d3 -below a1
+add_object d4 -below a2
+add_object c1 -below a2/d4
+
+display_object
+
+#erorr expected -> name n1 already exists 
+add_object d1 -below a2
