@@ -71,9 +71,10 @@ void C_Tcl_interface::tcl_main(int argc, char* argv[]) {
 
 int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   string cmd;
+  bool interactiveModeEnable = 0;
   if (argc == 1) {
     message.printBanner();
-    cmd = "source tcl_files/tcl_init_variables.tcl\nsource Tcl_int.tcl";
+    cmd = "source /usr/share/tcl_files/tcl_init_variables.tcl\nsource /usr/share/Tcl_int.tcl";
   } else if (argv[1] == std::string("-help")) {
     if (argc > 2) {
       message.printError();
@@ -86,7 +87,8 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
         message.printError();
       } else {
         message.printBanner();
-        cmd = "source tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource Tcl_int.tcl";
+        interactiveModeEnable = 1;
+        cmd = "source /usr/share/tcl_files/tcl_init_variables.tcl\nexecute_script " + std::string(argv[2]) + "\nsource /usr/share/Tcl_int.tcl";
       }
     } else {
       message.printError();
@@ -96,7 +98,9 @@ int C_Tcl_interface::cmdLineHandling (int argc, char *argv[]) {
   }
   // Run tcl console
   if (TCL_OK != Tcl_Eval (interp, cmd.c_str())) {
-    cout<<"[ERROR] Unexpected error from interpreter. Intercepted error "<<Tcl_GetStringResult (interp) << "." <<endl;
+    if (!interactiveModeEnable) {
+      cout<<"[ERROR] Unexpected error from interpreter. Intercepted error "<<Tcl_GetStringResult (interp) << "." <<endl;
+    }
     exit (1);
   }
   return 0;
@@ -148,10 +152,12 @@ int C_Tcl_interface::readInputDoFile(Tcl_Interp *interp, int objc, Tcl_Obj *CONS
     return TCL_ERROR;
   }
   string cmdArg=Tcl_GetString(objv[1]);
-  string invokeArg="sourceFile " + cmdArg;
+  string invokeArg="set interactiveModeEnable 1\nsourceFile " + cmdArg;
   if("TCL_OK" != run_Tcl_Eval(interp, invokeArg.c_str())) {
       return 1;
   }
+  invokeArg="set interactiveModeEnable 0";
+  run_Tcl_Eval(interp, invokeArg.c_str());
   return 0;
 }
   
