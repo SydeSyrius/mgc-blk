@@ -1,0 +1,4 @@
+# compile with -g for gdb
+g++ c_files/interp.cpp -l tcl -std=c++11 -o ~/Desktop/TestingDojo 
+cp  /usr/share/tcl_files ~/Desktop/. -rf
+cp  c_files/Tcl_int.tcl  ~/Desktop/. -rf
