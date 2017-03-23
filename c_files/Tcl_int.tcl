@@ -4,9 +4,8 @@
   # Use Tclx if available:
   catch {
       package require Tclx
-  
       # Prevent sigint from killing our shell:
-      signal ignore SIGINT
+      signal error SIGINT
   }
   
   # Initialise our own env variables:
@@ -460,8 +459,7 @@
           set env(CMDLINE) ""
           set env(CMDLINE_CURSOR) 0
       } elseif {$env(HISTORY_LEVEL) > $hlen} {
-          set env(HISTORY_LEVEL) $hleno match found.
-
+          set env(HISTORY_LEVEL) $hlen
       }
   }
   

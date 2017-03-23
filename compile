@@ -1,6 +1,6 @@
 # compile with -g for gdb
 #g++ c_files/interp.cpp c_files/memory.cpp c_files/Object.cpp c_files/cmdLine.cpp c_files/C_Tcl_Interpreter.cpp -l tcl -std=c++11 -o ~/Desktop/run_project 
 #elf_x86_64 elf32_x86_64 elf_i386 i386linux elf_l1om elf_k1om i386pep i386pe
-g++ c_files/interp.cpp -l tcl -std=c++11 -o -mi386linux ~/Desktop/TestingDojo  
-cp  tcl_files ~/Desktop/. -rf
-cp  c_files/Tcl_int.tcl  ~/Desktop/. -rf
+g++ c_files/interp.cpp -l tcl -std=c++11 -o  ~/Pulpit/TestingDojo  
+cp  tcl_files ~/Pulpit/. -rf
+cp  c_files/Tcl_int.tcl  ~/Pulpit/. -rf

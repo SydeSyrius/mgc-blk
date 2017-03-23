@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <tcl.h>
+#include <tcl/tcl.h>
 #include <string>
 #include <iostream>
 #include <sstream>

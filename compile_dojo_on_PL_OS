@@ -1,0 +1,8 @@
+# compile with -g for gdb
+#g++ c_files/interp.cpp -l tcl -std=c++11 -o /home/caseweekmgc/Desktop/TestingDojo 
+g++ c_files/interp.cpp -l tcl -std=c++11 -o /home/caseweekmgc/Pulpit/TestingDojo 
+cp  tcl_files            /usr/share/. -rf
+cp  c_files/Tcl_int.tcl  /usr/share/. -rf
+
+#cp  tcl_files            /home/caseweekmgc/. -rf
+#cp  c_files/Tcl_int.tcl  /home/caseweekmgc/tcl_files/. -rf
