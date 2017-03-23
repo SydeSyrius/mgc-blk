@@ -137,7 +137,11 @@ proc removeFromSingle {component_name} {
       puts "\[ERROR\] Object does not exist."
       return TCL_ERROR
     } else {
-      set name_list(original) [lreplace $name_list(original) $index $index]
+      if {![info exist ::env(env_td_merge_internal_names)]} {
+        set name_list(original) [lreplace $name_list(original) $index $index]
+      } else {
+        set name_list(original) "[lreplace $name_list(original) $index $index] "
+      }
     }
   }
   return TCL_OK

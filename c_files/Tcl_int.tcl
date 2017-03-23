@@ -28,14 +28,14 @@
       set env($var) $val
   }
   unset var val
-  
+
   array set ALIASES {}
   set forever 0
-  
+
   # Resource & history files:
   set HISTFILE $env(HOME)/.tclline_history
   set RCFILE $env(HOME)/.tcllinerc
-  
+
   proc ESC {} {
       return "\033"
   }

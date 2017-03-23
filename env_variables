@@ -20,4 +20,9 @@ DONE, checked
    env_td_print_internal_data
 DONE, checked
 
-6. 
+6. env_td_merge_internal_names
+bug przy:
+add_object a
+add_object b -below a
+add_object d -below a/x
+add_object -> lista jest popsuta
